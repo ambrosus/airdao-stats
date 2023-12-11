@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-black-100: 247 247 247;
+    --color-black-200: 230 230 230;
+    --color-black-400: 29 29 29;
+    --color-black-500: 25 25 25;
+    --color-black-600: 14 14 14;
+    --color-black-700: 0 0 0;
+    --color-neutral-100: 103 107 115;
+    --color-neutral-200: 88 102 126;
+    --color-blue-100: 69 126 255;
+
+    --color-success: 45 186 141;
+    --color-warning: 255 209 98;
+    --color-orange: 255 138 0;
+    --color-danger: 247 75 75;
+    --color-info: 16 160 222;
+    --color-gray: 119 119 119;
+
+    --container-width: 1300px;
+  }
+
+  html,
+  body {
+    @apply antialiased bg-black-100 text-black-700 text-base h-full;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-black-500 font-bold font-inter;
+  }
+
+  h4 {
+    @apply text-2xl;
+  }
+
+  h6 {
+    @apply text-sm;
+  }
+
+  p {
+    @apply text-lg font-normal leading-6.5;
+  }
+
+  a {
+    @apply text-blue-100;
+  }
+
+  #map-container {
+    height: 485px;
+    width: 100%;
+  }
+
+  .color-bg-success {
+    background-color: var(--color-success);
+  }
+}
+
+@layer utilities {
+  .panel {
+    @apply py-6 px-10 bg-white border border-solid border-black-200 rounded-4xl;
+  }
+
+  .inset-c {
+    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+  }
+
+  .round {
+    @apply flex w-[64px] h-[64px] justify-center items-center bg-black-100 border-2 border-solid border-black-200 rounded-circle;
+  }
+}

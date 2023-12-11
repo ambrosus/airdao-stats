@@ -1,0 +1,75 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { ethers } from 'ethers';
+// @ts-ignore
+import { Header } from '@airdao/ui-library';
+import { useWeb3React } from '@web3-react/core';
+// @ts-ignore
+import {
+  useAuthorization,
+  useAutoLogin,
+} from 'airdao-components-and-tools/hooks';
+// @ts-ignore
+import {
+  metamaskConnector,
+  walletconnectConnector,
+} from 'airdao-components-and-tools/utils';
+
+// @ts-ignore
+const readProvider = new ethers.providers.JsonRpcProvider(
+  process.env.NEXT_PUBLIC_EXPLORER_NETWORK
+);
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const [balance, setBalance] = useState('0');
+  const { account } = useWeb3React();
+
+  const { loginMetamask, loginWalletConnect, logout } = useAuthorization(
+    metamaskConnector,
+    walletconnectConnector
+  );
+  const isLoaded = useAutoLogin(metamaskConnector);
+
+  useEffect(() => {
+    getBalance();
+
+    if (readProvider) {
+      readProvider.on('block', () => {
+        getBalance();
+      });
+    }
+    return () => {
+      if (readProvider) {
+        readProvider.removeAllListeners('block');
+      }
+    };
+  }, []);
+
+  const getBalance = async () => {
+    if (!account) return;
+
+    const bnBalance = await readProvider.getBalance(account);
+    const numBalance = ethers.utils.formatEther(bnBalance);
+    setBalance((+numBalance).toFixed(2));
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <main className="flex-auto pt-28">
+      <div className="relative">
+        <Header
+          loginMetamask={loginMetamask}
+          loginWalletConnect={loginWalletConnect}
+          account={account}
+          disconnect={logout}
+          balance={balance}
+        />
+      </div>
+      <div className="flex flex-col pt-10 pb-10">{children}</div>
+    </main>
+  );
+}

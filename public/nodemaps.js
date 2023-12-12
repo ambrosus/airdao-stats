@@ -69,6 +69,8 @@ $('#mapDropdown').change(function () {
     }
   }
 
+  console.log('mmapKey: ', mapKey);
+
   function mapReady() {
     var mapGeoJSON = Highcharts.maps[mapKey],
       range = getUrlParameter('range'),
@@ -213,9 +215,6 @@ $('#mapDropdown').change(function () {
       };
       _series.push(seriesgeo);
 
-      console.log('data; ', data);
-      console.log('_series; ', _series);
-
       $('#container').highcharts('Map', {
         // title: {
         //   text: capitalizeFirstLetter(data[0].country),
@@ -268,8 +267,6 @@ $('#mapDropdown').change(function () {
       });
     }
   }
-
-  console.log('mapKey: ', mapKey);
 
   if (Highcharts.maps[mapKey]) {
     mapReady();

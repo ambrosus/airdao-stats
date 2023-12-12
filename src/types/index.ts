@@ -28,4 +28,7 @@ export interface INode {
   readable: {
     [key: string]: any;
   };
+  history: {
+    [key: string]: any;
+  };
 }

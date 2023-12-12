@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import _ from 'lodash';
 
 // import Highcharts from 'highcharts';
@@ -9,200 +9,237 @@ import _ from 'lodash';
 
 import { useData } from '@/contexts/data/use-data';
 
+function filterUniqueByKey(array, key) {
+  const seen = new Set();
+  return array.filter((obj) => {
+    const value = obj[key];
+    if (!seen.has(value)) {
+      seen.add(value);
+      return true;
+    }
+    return false;
+  });
+}
+
 function getGeos(nodes) {
   // const pinned = JSON.parse(localStorage.pinned);
 
-  return nodes.reduce((geos, node, i) => {
+  const result = nodes.reduce((geos, node, i) => {
     return geos.concat({
-      address: node.info.name,
-      name: node.info.node,
-      id: node.id,
+      // address: node.info.name,
+      // name: node.info.node,
+      // id: node.id,
       // pinned: pinned.some((pin) => {
       //   const value = node.info.name.match(new RegExp('\\S+$', 'g'))[0];
       //   return new RegExp(value, 'i').test(pin);
       // }),
-      coordinates: [_.get(node, 'geo.ll', [])[1], _.get(node, 'geo.ll', [])[0]],
+
+      key: _.get(node, 'geo.country').toLowerCase(),
+      lat: _.get(node, 'geo.ll', [])[0],
+      lon: _.get(node, 'geo.ll', [])[1],
+      name: node.info.name.slice(-5),
+      // coordinates: [_.get(node, 'geo.ll', [])[1], _.get(node, 'geo.ll', [])[0]],
     });
   }, []);
+
+  return filterUniqueByKey(result, 'lat');
   // .sort((a, b) => {
   //   return a.pinned < b.pinned ? -1 : 0;
   // });
 }
 
 const MapChart = () => {
-  // const { nodes, bestBlock } = useData();
+  const { nodes, bestBlock } = useData();
+  const [markers, setMarkers] = useState([]);
 
-  // const mapOptions = {
-  //   chart: {
-  //     map: 'countries/ie/ie-all',
-  //   },
-  //   title: {
-  //     text: ' ',
-  //   },
-  //   credits: {
-  //     enabled: false,
-  //   },
-  //   mapNavigation: {
-  //     enabled: false,
-  //   },
-  //   tooltip: {
-  //     headerFormat: '',
-  //     pointFormat: 'lat: {point.lat}, lon: {point.lon}',
-  //   },
-  //   series: [
-  //     {
-  //       // Use the gb-all map with no data as a basemap
-  //       name: 'Basemap',
-  //       mapData: mapDataIE,
-  //       borderColor: '#A0A0A0',
-  //       nullColor: 'rgba(200, 200, 200, 0.3)',
-  //       showInLegend: false,
-  //     },
-  //     {
-  //       // Specify points using lat/lon
-  //       type: 'mapbubble',
-  //       name: 'Locations',
-  //       color: '#4169E1',
-  //       data: [{ z: 10, keyword: 'Galway', lat: 53.27, lon: -9.25 }],
-  //       cursor: 'pointer',
-  //       point: {
-  //         events: {
-  //           click: function () {
-  //             console.log(this.keyword);
-  //           },
-  //         },
-  //       },
-  //     },
-  //   ],
-  // };
+  console.log('markers: ', markers);
 
-  // var baseMapPath = 'https://code.highcharts.com/mapdata/custom/world.js',
-  //   showDataLabels = false,
-  //   mapCount = 0,
-  //   searchText,
-  //   mapOptions = '';
+  useEffect(() => {
+    if (nodes.length > 0) {
+      setMarkers(getGeos(nodes));
+    }
+  }, [nodes]);
 
-  // var mapGeoJSON = Highcharts.maps['custom/world'];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const baseMapPath = 'https://code.highcharts.com/mapdata/';
 
-  // console.log('my: ', mapGeoJSON);
+        const topologyResponse = await fetch(
+          `${baseMapPath}custom/world.topo.json`
+        );
+        const mapData = await topologyResponse.json();
 
-  // const options = {};
+        const data = mapData.objects.default.geometries.map((g, value) => ({
+          key: g.properties['hc-key'],
+          value,
+        }));
 
-  // useEffect(() => {
-  //   (async () => {
+        // console.log(
+        //   'data: ',
+        //   mapData.objects.default.geometries.map((g, value) => {
+        //     console.log('vaava; ', value);
+        //   })
+        // );
 
-  //     const baseMapPath =
-  //       'https://code.highcharts.com/mapdata/custom/world.topo.json';
+        Highcharts.mapChart('container', {
+          chart: {
+            map: mapData,
+          },
+          title: null,
+          subtitle: null,
+          mapNavigation: {
+            enabled: true,
+          },
+          tooltip: {
+            headerFormat: '',
+            pointFormat:
+              '<span>{point.name}</span>&nbsp;<b>{point.country}</b><br>Lat: {point.lat:.2f}, Lon: {point.lon:.2f}',
+          },
+          colorAxis: {
+            min: 0,
+            stops: [
+              [0, '#efefff'],
+              [0.5, Highcharts.getOptions().colors[0]],
+              [
+                1,
+                Highcharts.color(Highcharts.getOptions().colors[0])
+                  .brighten(-0.5)
+                  .get(),
+              ],
+            ],
+          },
+          plotOptions: {
+            mappoint: {
+              cluster: {
+                enabled: true,
+                allowOverlap: false,
+                animation: {
+                  duration: 450,
+                },
+                layoutAlgorithm: {
+                  type: 'grid',
+                  gridSize: 70,
+                },
+                zones: [
+                  {
+                    from: 1,
+                    to: 4,
+                    marker: {
+                      radius: 13,
+                    },
+                  },
+                  {
+                    from: 5,
+                    to: 9,
+                    marker: {
+                      radius: 15,
+                    },
+                  },
+                  {
+                    from: 10,
+                    to: 15,
+                    marker: {
+                      radius: 17,
+                    },
+                  },
+                  {
+                    from: 16,
+                    to: 20,
+                    marker: {
+                      radius: 19,
+                    },
+                  },
+                  {
+                    from: 21,
+                    to: 100,
+                    marker: {
+                      radius: 21,
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          legend: {
+            layout: 'vertical',
+            align: 'left',
+            verticalAlign: 'bottom',
+          },
+          series: [
+            // {
+            //   name: 'World',
+            //   accessibility: {
+            //     exposeAsGroupOnly: true,
+            //   },
+            //   borderColor: '#A0A0A0',
+            //   nullColor: 'rgba(177, 244, 177, 0.5)',
+            //   showInLegend: false,
+            // },
+            {
+              data,
+              mapData: mapData,
+              joinBy: ['hc-key', 'key'],
+              name: 'Random data',
+              // dataLabels: {
+              //   enabled: false,
+              //   style: {
+              //     fontWeight: 100,
+              //     fontSize: '10px',
+              //     textOutline: 'none',
+              //   },
+              // },
+            },
+            {
+              type: 'mapline',
+              name: 'Lines',
+              accessibility: {
+                enabled: false,
+              },
+              // /*
+              // data: [{
+              //     geometry: mapData.objects.default['hc-recommended-mapview'].insets[0].geoBounds
+              // }],
+              // // */
+              nullColor: '#333',
+              showInLegend: false,
+              enableMouseTracking: false,
+            },
+            {
+              type: 'mappoint',
+              name: 'Nodes',
+              enableMouseTracking: true,
+              accessibility: {
+                point: {
+                  descriptionFormat:
+                    '{#if isCluster}' +
+                    'Grouping of {clusterPointsAmount} points.' +
+                    '{else}' +
+                    '{name}, country code: {country}.' +
+                    '{/if}',
+                },
+              },
+              // colorKey: 'clusterPointsAmount',
+              data: markers,
+              dataLabels: {
+                verticalAlign: 'top',
+              },
+            },
+          ],
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-  //     let showDataLabels = false,
-  //       mapCount = 0,
-  //       mapOptions = '';
-
-  //     const mapData = await fetch(baseMapPath)
-  //       .then((response) => {
-  //         return response.json();
-  //       })
-  //       .catch((e) => console.log('Error in map', e));
-
-  //     const data = mapData.objects.default.geometries.map((g, value) => ({
-  //       key: g.properties['hc-key'],
-  //       value,
-  //     }));
-
-  //     Highcharts.mapChart('map-container', {
-  //       chart: {
-  //         map: mapData,
-  //       },
-
-  //       title: {
-  //         text: null,
-  //       },
-
-  //       accessibility: {
-  //         series: {
-  //           descriptionFormat:
-  //             '{series.name}, map with {series.points.length} areas.',
-  //           pointDescriptionEnabledThreshold: 50,
-  //         },
-  //       },
-
-  //       mapNavigation: {
-  //         enabled: true,
-  //         buttonOptions: {
-  //           alignTo: 'spacingBox',
-  //           x: 10,
-  //         },
-  //       },
-
-  //       colorAxis: {
-  //         min: 0,
-  //         stops: [
-  //           [0, '#EFEFFF'],
-  //           [0.5, Highcharts.getOptions().colors[0]],
-  //           [
-  //             1,
-  //             Highcharts.color(Highcharts.getOptions().colors[0])
-  //               .brighten(-0.5)
-  //               .get(),
-  //           ],
-  //         ],
-  //       },
-
-  //       legend: {
-  //         layout: 'vertical',
-  //         align: 'left',
-  //         verticalAlign: 'bottom',
-  //       },
-
-  //       series: [
-  //         {
-  //           data,
-  //           joinBy: ['hc-key', 'key'],
-  //           name: 'Random data',
-  //           dataLabels: {
-  //             enabled: showDataLabels,
-  //             style: {
-  //               fontWeight: 100,
-  //               fontSize: '10px',
-  //               textOutline: 'none',
-  //             },
-  //           },
-  //         },
-  //         {
-  //           type: 'mapline',
-  //           name: 'Lines',
-  //           accessibility: {
-  //             enabled: false,
-  //           },
-  //           data: Highcharts.geojson(mapData, 'mapline'),
-  //           nullColor: '#333333',
-  //           showInLegend: false,
-  //           enableMouseTracking: false,
-  //         },
-  //       ],
-  //     });
-  //   })();
-  // }, []);
-
-  // return (
-  //   <HighchartsReact
-  //     constructorType={'mapChart'}
-  //     highcharts={Highcharts}
-  //     options={options}
-  //   />
-  // );
+    if (markers.length > 0) {
+      fetchData();
+    }
+  }, [markers]);
 
   return (
     <div id="countries" style={{ minHeight: '500px' }}>
-      <div id="mapBox">
-        <div id="up">&nbsp;</div>
-        <div>
-          <select id="mapDropdown"></select>
-        </div>
-        <div id="container">
-          <div id="overlay">Spinner</div>
-        </div>
-      </div>
+      <div id="container"></div>
     </div>
   );
 };

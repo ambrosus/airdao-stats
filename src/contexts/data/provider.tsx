@@ -7,6 +7,8 @@ import _ from 'lodash';
 import * as Toast from '@/config/toast';
 import { latencyFilter } from '@/lib/helpers/table';
 import DataContext from './context';
+import { INode } from '@/types';
+import { getApollos } from '@/services/apollo.service';
 
 const MAX_BINS = 40;
 
@@ -16,19 +18,23 @@ const baseApiUrl = process.env.NEXT_PUBLIC_API_ENDPOINT
 const socketUrl = `${baseApiUrl}/client`;
 
 const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const didUnmount = useRef(false);
   const [nodes, setNodes] = useState([]);
+  const [apollosNodes, setApollosNodes] = useState([]);
+  // const [loading, setIsLoading] = useState(true);
+  const [incomeNodes, setIncomeNodes] = useState<INode[]>([]);
   const [nodesTotal, setNodesTotal] = useState(0);
   const [bestBlock, setBestBlock] = useState(0);
   const [nodesActive, setNodesActive] = useState(0);
   const [bestStats, setBestStats] = useState(0);
   const [lastBlock, setLastBlock] = useState(0);
   const [latency, setLatency] = useState(0);
-  let lastDifficulty;
+  const [avgBlockTime, setAvgBlockTime] = useState(0);
+  // let lastDifficulty;
   let blockPropagationChart;
-  let blockPropagationAvg;
+  // let blockPropagationAvg;
   let uncleCount;
   let uncleCountChart;
-  const [avgBlockTime, setAvgBlockTime] = useState(0);
   let avgHashrate;
   let lastGasLimit;
   let lastBlocksTime;
@@ -38,7 +44,45 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   let pinned = [];
   let miners = [];
 
-  const didUnmount = useRef(false);
+  useEffect(() => {
+    if (apollosNodes.length > 0 && incomeNodes.length > 0) {
+      const result = apollosNodes.map((node) => {
+        const matchingObj = incomeNodes.find((incomeNode) => {
+          return (
+            incomeNode.id.replace('apollo', '').toLowerCase() ===
+            node.address.toLowerCase()
+          );
+        });
+
+        if (matchingObj) {
+          return { ...matchingObj, stake: node.stake };
+        }
+        return node;
+      });
+
+      if (result.length > 0) {
+        setNodes(result);
+        setNodesActive(result.length);
+      }
+    }
+  }, [apollosNodes, incomeNodes]);
+
+  useEffect(() => {
+    (async function () {
+      try {
+        const response = await getApollos({
+          sort: 'totalBundles',
+          page: '',
+          limit: 200,
+        });
+        if (response?.data) {
+          setApollosNodes(response.data);
+        }
+      } catch (e) {
+        console.info('Error while get getApollos: ', e);
+      }
+    })();
+  }, []);
 
   const { sendMessage } = useWebSocket(socketUrl, {
     onOpen: () => {
@@ -54,7 +98,7 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
       if (incomeData.emit && incomeData.emit[0] === 'init') {
         Toast.success('Got nodes list');
         const incomeNodes = incomeData.emit[1].nodes;
-        setNodes(incomeNodes);
+        setIncomeNodes(incomeNodes);
         socketAction('init', incomeNodes);
       } else if (incomeData.emit && incomeData.emit[0] === 'client-latency') {
         socketAction('client-latency', incomeData.emit[1]);
@@ -69,11 +113,11 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     reconnectInterval: 5000,
   });
 
-  const socketAction = (action, data) => {
+  const socketAction = (action: string, data: any) => {
     let index;
     switch (action) {
       case 'init':
-        data.forEach((node) => {
+        data.forEach((node: any) => {
           // Init hash rate
           if (_.isUndefined(node.stats.hashrate)) node.stats.hashrate = 0;
 
@@ -94,9 +138,9 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         break;
       case 'block':
         index = findIndex({ id: data.id });
-        if (index >= 0 && !_.isUndefined(nodes[index].stats)) {
-          if (nodes[index].stats.block.number < data.block.number) {
-            const best = _.max(nodes, (node) => {
+        if (index >= 0 && !_.isUndefined(incomeNodes[index].stats)) {
+          if (incomeNodes[index].stats.block.number < data.block.number) {
+            const best = _.max(incomeNodes, (node) => {
               return parseInt(node.stats.block.number);
             }).stats.block;
 
@@ -105,11 +149,11 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
             } else {
               data.block.arrived = best.arrived;
             }
-            nodes[index].history = data.history;
+            incomeNodes[index].history = data.history;
           }
 
-          nodes[index].stats.block = data.block;
-          nodes[index].stats.propagationAvg = data.propagationAvg;
+          incomeNodes[index].stats.block = data.block;
+          incomeNodes[index].stats.propagationAvg = data.propagationAvg;
         }
         updateBestBlock();
         break;
@@ -119,13 +163,13 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         if (addNewNode(data)) {
           Toast.success(
             'New node ' +
-              nodes[findIndex({ id: data.id })].info.name +
+              incomeNodes[findIndex({ id: data.id })].info.name +
               ' connected!',
             'New node!'
           );
         } else {
           Toast.info(
-            'Node ' + nodes[index].info.name + ' reconnected!',
+            'Node ' + incomeNodes[index].info.name + ' reconnected!',
             'Node is back!'
           );
         }
@@ -136,16 +180,16 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
         if (
           index >= 0 &&
-          !_.isUndefined(nodes[index]) &&
-          !_.isUndefined(nodes[index].stats)
+          !_.isUndefined(incomeNodes[index]) &&
+          !_.isUndefined(incomeNodes[index].stats)
         ) {
-          if (!_.isUndefined(nodes[index].stats.latency))
-            data.stats.latency = nodes[index].stats.latency;
+          if (!_.isUndefined(incomeNodes[index].stats.latency))
+            data.stats.latency = incomeNodes[index].stats.latency;
 
           if (_.isUndefined(data.stats.hashrate)) data.stats.hashrate = 0;
 
-          if (nodes[index].stats.block.number < data.stats.block.number) {
-            const best = _.max(nodes, function (node) {
+          if (incomeNodes[index].stats.block.number < data.stats.block.number) {
+            const best = _.max(incomeNodes, function (node) {
               return parseInt(node.stats.block.number);
             }).stats.block;
 
@@ -155,18 +199,17 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
               data.stats.block.arrived = best.arrived;
             }
 
-            nodes[index].history = data.history;
+            incomeNodes[index].history = data.history;
           }
 
-          nodes[index].stats = data.stats;
+          incomeNodes[index].stats = data.stats;
 
           if (
             !_.isUndefined(data.stats.latency) &&
-            _.get(nodes[index], 'stats.latency', 0) !== data.stats.latency
+            _.get(incomeNodes[index], 'stats.latency', 0) !== data.stats.latency
           ) {
-            nodes[index].stats.latency = data.stats.latency;
-
-            nodes[index] = latencyFilter(nodes[index]);
+            incomeNodes[index].stats.latency = data.stats.latency;
+            incomeNodes[index] = latencyFilter(incomeNodes[index]);
           }
 
           updateBestBlock();
@@ -176,36 +219,37 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         index = findIndex({ id: data.id });
 
         if (!_.isUndefined(data.id) && index >= 0) {
-          const node = nodes[index];
+          const node = incomeNodes[index];
 
           if (
             !_.isUndefined(node) &&
             !_.isUndefined(node.stats.pending) &&
             !_.isUndefined(data.pending)
           )
-            nodes[index].stats.pending = data.pending;
+            incomeNodes[index].stats.pending = data.pending;
         }
         break;
       case 'stats':
         index = findIndex({ id: data.id });
 
         if (!_.isUndefined(data.id) && index >= 0) {
-          const node = nodes[index];
+          const node = incomeNodes[index];
 
           if (!_.isUndefined(node) && !_.isUndefined(node.stats)) {
-            nodes[index].stats.active = data.stats.active;
-            nodes[index].stats.mining = data.stats.mining;
-            nodes[index].stats.hashrate = data.stats.hashrate;
-            nodes[index].stats.peers = data.stats.peers;
-            nodes[index].stats.gasPrice = data.stats.gasPrice;
-            nodes[index].stats.uptime = data.stats.uptime;
+            incomeNodes[index].stats.active = data.stats.active;
+            incomeNodes[index].stats.mining = data.stats.mining;
+            incomeNodes[index].stats.hashrate = data.stats.hashrate;
+            incomeNodes[index].stats.peers = data.stats.peers;
+            incomeNodes[index].stats.gasPrice = data.stats.gasPrice;
+            incomeNodes[index].stats.uptime = data.stats.uptime;
 
             if (
               !_.isUndefined(data.stats.latency) &&
-              _.get(nodes[index], 'stats.latency', 0) !== data.stats.latency
+              _.get(incomeNodes[index], 'stats.latency', 0) !==
+                data.stats.latency
             ) {
-              nodes[index].stats.latency = data.stats.latency;
-              latencyFilter(nodes[index]);
+              incomeNodes[index].stats.latency = data.stats.latency;
+              latencyFilter(incomeNodes[index]);
             }
             updateActiveNodes();
           }
@@ -215,18 +259,19 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         index = findIndex({ id: data.id });
 
         if (index >= 0) {
-          nodes[index].info = data.info;
+          incomeNodes[index].info = data.info;
 
-          if (_.isUndefined(nodes[index].pinned)) nodes[index].pinned = false;
+          if (_.isUndefined(incomeNodes[index].pinned))
+            incomeNodes[index].pinned = false;
 
           // Init latency
-          latencyFilter(nodes[index]);
+          latencyFilter(incomeNodes[index]);
           updateActiveNodes();
         }
         break;
       case 'blockPropagationChart':
         blockPropagationChart = data.histogram;
-        blockPropagationAvg = data.avg;
+        // blockPropagationAvg = data.avg;
         break;
       case 'uncleCount':
         uncleCount = uncleCount.data[0] + uncleCount.data[1];
@@ -260,7 +305,7 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
         if (!_.isEqual(blockPropagationChart, data.propagation.histogram)) {
           blockPropagationChart = data.propagation.histogram;
-          blockPropagationAvg = data.propagation.avg;
+          // blockPropagationAvg = data.propagation.avg;
         }
 
         data.uncleCount.reverse();
@@ -295,7 +340,7 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
       case 'inactive':
         index = findIndex({ id: data.id });
         if (index >= 0) {
-          if (!_.isUndefined(data.stats)) nodes[index].stats = data.stats;
+          if (!_.isUndefined(data.stats)) incomeNodes[index].stats = data.stats;
           updateActiveNodes();
         }
         break;
@@ -304,7 +349,7 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
           const index = findIndex({ id: data.id });
 
           if (index >= 0) {
-            const node = nodes[index];
+            const node = incomeNodes[index];
             if (
               !_.isUndefined(node) &&
               !_.isUndefined(node.stats) &&
@@ -338,7 +383,7 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     }
   };
 
-  const findIndex = (search) => _.findIndex(nodes, search);
+  const findIndex = (search) => _.findIndex(incomeNodes, search);
 
   useEffect(() => {
     return () => {
@@ -348,31 +393,31 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   const updateActiveNodes = () => {
     updateBestBlock();
-    setNodesTotal(nodes.length);
-    const data = _.filter(nodes, (node) => {
+    setNodesTotal(incomeNodes.length);
+    const data = _.filter(incomeNodes, (node) => {
       return node.stats.active === true;
     }).length;
 
-    setNodesActive(data);
+    // setNodesActive(data);
   };
 
   const updateBestBlock = () => {
-    if (nodes.length) {
-      const currentBestBlock = nodes.find((el) => {
+    if (incomeNodes.length) {
+      const currentBestBlock = incomeNodes.find((el) => {
         return (
           el.info.name.includes('atlas') &&
           el.info.node.includes('OpenEthereum')
         );
-      }).stats.block.number;
+      })?.stats?.block?.number;
       if (currentBestBlock && currentBestBlock !== bestBlock) {
         setBestBlock(currentBestBlock);
-        const data = _.max(nodes, (node) => {
+        const data = _.max(incomeNodes, (node) => {
           return parseInt(node.stats.block.number);
-        }).stats;
+        })?.stats;
         setBestStats(data);
 
-        bestStats && setLastBlock(bestStats.block.arrived);
-        lastDifficulty = bestStats && bestStats.block.difficulty;
+        bestStats && setLastBlock(bestStats?.block.arrived);
+        // lastDifficulty = bestStats && bestStats.block.difficulty;
       }
     }
   };
@@ -392,20 +437,20 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
       data.pinned = false;
 
-      nodes.push(data);
+      incomeNodes.push(data);
 
       return true;
     }
 
-    data.pinned = !_.isUndefined(nodes[index].pinned)
-      ? nodes[index].pinned
+    data.pinned = !_.isUndefined(incomeNodes[index].pinned)
+      ? incomeNodes[index].pinned
       : false;
 
-    if (!_.isUndefined(nodes[index].history)) {
-      data.history = nodes[index].history;
+    if (!_.isUndefined(incomeNodes[index].history)) {
+      data.history = incomeNodes[index].history;
     }
 
-    nodes[index] = data;
+    incomeNodes[index] = data;
     updateActiveNodes();
     return false;
   };

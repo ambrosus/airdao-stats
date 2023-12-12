@@ -4,7 +4,7 @@ import { Transition } from '@headlessui/react';
 
 import ChevronDown from '@/components/icons/chevron-down-icon';
 
-export const rangeList = [10, 20, 50, 250];
+export const rangeList = [20, 30, 50, 200];
 
 export function RangeList({ table }) {
   const [pageSize, setPageSize] = useState(

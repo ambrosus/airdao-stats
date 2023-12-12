@@ -3,14 +3,12 @@ import {
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
-  Table,
 } from '@tanstack/react-table';
 import { useState, useEffect } from 'react';
 
 import TableHeader from './header';
 import columns from './columns';
 import Loader from '@/components/ui/loader';
-import { INode } from '@/types';
 import { useData } from '@/contexts/data/use-data';
 
 const StatisticsTable = () => {
@@ -35,12 +33,12 @@ const StatisticsTable = () => {
     // })
   }, [nodes]);
 
-  const table: Table<INode> = useReactTable({
+  const table = useReactTable({
     data: currentNodes,
     columns,
     initialState: {
       pagination: {
-        pageSize: 10,
+        pageSize: 20,
       },
     },
     getCoreRowModel: getCoreRowModel(),

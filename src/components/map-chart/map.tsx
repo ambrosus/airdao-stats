@@ -1,17 +1,10 @@
+// @ts-nocheck
 import { useState, useEffect } from 'react';
 import _ from 'lodash';
 
-// import { ethers } from 'ethers';
-// import { Number } from '@/lib/helpers/number';
-// import Highcharts from 'highcharts';
-// import HighchartsReact from 'highcharts-react-official';
-// import highchartsMap from 'highcharts/modules/map';
-// import mapDataIE from '@highcharts/map-collection/countries/ie/ie-all.geo.json';
-// highchartsMap(Highcharts);
-
 import WidgetList from '@/components/widget-list';
 import { useData } from '@/contexts/data/use-data';
-import { ICountryNode, IGeoNode } from '@/types';
+import { IContinentItem, ICountryNode, IGeoNode } from '@/types';
 import {
   calculateContinentStake,
   formatEtherAmount,
@@ -27,7 +20,7 @@ const MapChart = () => {
   const { nodes } = useData();
   const [isLoading, setIsLoading] = useState(true);
   const [markers, setMarkers] = useState<IGeoNode[]>([]);
-  const [continents, setContinents] = useState([]);
+  const [continents, setContinents] = useState<IContinentItem[]>([]);
   const [countries, setCountries] = useState<ICountryNode[]>([]);
 
   useEffect(() => {
@@ -42,21 +35,16 @@ const MapChart = () => {
       try {
         const topologyResponse = await fetch(baseMapPath);
         const mapData = await topologyResponse.json();
-
-        setContinents(calculateContinentStake(mapData, countries));
-
-        Highcharts.mapChart('map-container', {
+        const mapChartOptions: Highcharts.Options = {
           chart: {
             map: mapData,
           },
+          title: '',
           credits: {
             enabled: false,
           },
-          title: null,
-          subtitle: null,
           mapNavigation: {
             enabled: true,
-            align: 'right',
             buttonOptions: {
               align: 'right',
               verticalAlign: 'bottom',
@@ -64,7 +52,8 @@ const MapChart = () => {
           },
           tooltip: {
             headerFormat: '',
-            pointFormatter: function () {
+            // @ts-ignore
+            pointFormatter: function (): string {
               return (
                 '<b>' +
                 this.name +
@@ -161,7 +150,7 @@ const MapChart = () => {
           series: [
             {
               data: countries,
-              mapData: mapData,
+              mapData,
               joinBy: ['hc-key', 'key'],
               name: 'Data',
             },
@@ -181,7 +170,10 @@ const MapChart = () => {
               },
             },
           ],
-        });
+        };
+
+        Highcharts.mapChart('map-container', mapChartOptions);
+        setContinents(calculateContinentStake(mapData, countries));
       } catch (error) {
         console.error('Error fetching data:', error);
       }

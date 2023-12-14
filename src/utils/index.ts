@@ -1,19 +1,16 @@
 import _ from 'lodash';
 
-import { ICountryNode, IGeoNode, INode } from '@/types';
+import { IContinentItem, ICountryNode, IGeoNode, INode } from '@/types';
 
-export function shortenAddress(address: string, chars = 8): string {
-  return `${address.replace('apollo', '').slice(0, chars)}...${address.slice(
-    address.length - chars
-  )}`;
-}
-
-export const calculateContinentStake = (mapData, stakeData: ICountryNode[]) => {
-  const result = [];
+export const calculateContinentStake = (
+  mapData: any,
+  stakeData: ICountryNode[]
+) => {
+  const result: IContinentItem[] = [];
 
   stakeData.forEach((data) => {
     const geometry = mapData.objects.default.geometries.find(
-      (geo) => geo.properties['hc-key'] === data.key
+      (geo: any) => geo.properties['hc-key'] === data.key
     );
 
     if (geometry) {
@@ -32,7 +29,7 @@ export const calculateContinentStake = (mapData, stakeData: ICountryNode[]) => {
     }
   });
 
-  return result.sort((a, b) => b.stakeSizes - a.stakeSizes);
+  return result.sort((a, b) => +b.stakeSizes - +a.stakeSizes);
 };
 
 export function getGeos(nodes: INode[]) {
@@ -95,7 +92,7 @@ export const groupedByCountry = (nodes: INode[]) => {
   return modifyNodes;
 };
 
-export function formatEtherAmount(etherAmount) {
+export function formatEtherAmount(etherAmount: number) {
   if (etherAmount >= 1e6) {
     return (etherAmount / 1e6).toFixed(2) + 'M';
   } else if (etherAmount >= 1e3) {
@@ -111,3 +108,9 @@ export const formatStake = (stake: number) => {
     maximumFractionDigits: 6,
   });
 };
+
+export function shortenAddress(address: string, chars = 8): string {
+  return `${address.replace('apollo', '').slice(0, chars)}...${address.slice(
+    address.length - chars
+  )}`;
+}

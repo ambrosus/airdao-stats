@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { createColumnHelper } from '@tanstack/react-table';
 import cn from 'clsx';
 
@@ -27,16 +29,13 @@ const columns = [
       </span>
     ),
     cell: (info) => {
-      return <a href="#">{info.getValue().replace('apollo', '')}</a>;
+      return (
+        <span className="text-blue-100">
+          {info.getValue().replace('apollo', '')}
+        </span>
+      );
     },
   }),
-  // columnHelper.accessor('info.node', {
-  //   header: () => (
-  //     <span className="flex items-center">
-  //       Version <InfoSmallIcon className="ml-1" />
-  //     </span>
-  //   ),
-  // }),
   columnHelper.accessor('geo.country', {
     header: () => (
       <span className="flex items-center">
@@ -45,13 +44,6 @@ const columns = [
     ),
     cell: (info) => info.getValue() || '--',
   }),
-  // columnHelper.accessor('info.ip', {
-  //   header: () => (
-  //     <span className="flex items-center">
-  //       Host <InfoSmallIcon className="ml-1" />
-  //     </span>
-  //   ),
-  // }),
   columnHelper.accessor('readable.latency', {
     header: () => <LatencyIcon className="mx-auto" />,
     cell: (info) => <div className="text-center">{info.getValue()}</div>,
@@ -78,7 +70,9 @@ const columns = [
         Tx Hash <InfoSmallIcon className="ml-1" />
       </span>
     ),
-    cell: (info) => <a href="#">{shortenAddress(info.getValue())}</a>,
+    cell: (info) => (
+      <span className="text-blue-100">{shortenAddress(info.getValue())}</span>
+    ),
   }),
   columnHelper.accessor('stats.block.received', {
     header: () => <BlockTimeIcon className="mx-auto" />,

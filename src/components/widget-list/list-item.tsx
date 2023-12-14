@@ -1,4 +1,4 @@
-import { WidgetListItem } from '@/types';
+import { IContinentItem } from '@/types';
 import { formatEtherAmount } from '@/utils';
 
 const ListItem = ({
@@ -6,7 +6,7 @@ const ListItem = ({
   index,
 }: {
   index: number;
-  item: WidgetListItem;
+  item: IContinentItem;
   className?: string;
 }) => {
   const { continent, stakeSizes } = item;

@@ -10,35 +10,27 @@ import TableHeader from './header';
 import columns from './columns';
 import Loader from '@/components/ui/loader';
 import { useData } from '@/contexts/data/use-data';
+import { INode } from '@/types';
 
 const StatisticsTable = () => {
   const { nodes } = useData();
-  const [currentNodes, setCurrentNodes] = useState([]);
+  const [currentNodes, setCurrentNodes] = useState<INode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedName, setSelectedName] = useState('all');
 
   useEffect(() => {
     if (nodes.length > 0) {
       setCurrentNodes(nodes);
       setIsLoading(false);
     }
-
-    // console.log('currentNodes; ', nodes);
-    // nodes.filter((node) => {
-    //   if (selectedName !== 'all') {
-    //     return node.info.name.indexOf(selectedName) > -1;
-    //   } else {
-    //     return node;
-    //   }
-    // })
   }, [nodes]);
 
   const table = useReactTable({
     data: currentNodes,
-    columns,
+    // @ts-ignore
+    columns: columns,
     initialState: {
       pagination: {
-        pageSize: 20,
+        pageSize: 200,
       },
     },
     getCoreRowModel: getCoreRowModel(),

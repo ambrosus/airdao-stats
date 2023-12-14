@@ -5,11 +5,6 @@ export type BlockListItem = {
   className?: string;
 };
 
-export type WidgetListItem = {
-  continent: string;
-  stakeSizes: string;
-};
-
 export interface ISearch {
   value: string;
   setValue: any;
@@ -92,5 +87,5 @@ export interface ICountryNode {
 
 export interface IContinentItem {
   continent: string;
-  stakeSizes: string;
+  stakeSizes: number;
 }

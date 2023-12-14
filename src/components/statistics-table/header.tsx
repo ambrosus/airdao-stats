@@ -2,10 +2,16 @@ import { memo, useState } from 'react';
 
 import { RangeList } from '@/components/statistics-table/filters';
 import Pagination from '@/components/statistics-table/pagination';
-import SearchInput from '@/components/ui/search-bar/search-input';
+import SearchInput from '@/components/ui/search-bar';
 import { useData } from '@/contexts/data/use-data';
 
-const TableHeader = ({ table, pageCount }) => {
+const TableHeader = ({
+  table,
+  pageCount,
+}: {
+  table: any;
+  pageCount: number;
+}) => {
   const [value, setValue] = useState<string>('');
   const { nodesActive } = useData();
 

@@ -153,7 +153,7 @@ import ArrowRight from '@/components/icons/arrow-right-icon';
 //   return items;
 // };
 
-const Paginate = ({ table, pageCount }) => {
+const Paginate = ({ table, pageCount }: { table: any; pageCount: number }) => {
   return (
     <nav>
       <ul className="flex items-center text-base gap-1">

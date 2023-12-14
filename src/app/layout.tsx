@@ -27,15 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* <Script src="https://code.highcharts.com/modules/coloraxis.js" /> */}
-        {/* <Script src="https://code.highcharts.com/maps/highmaps.js" /> */}
-        {/* <Script src="https://code.jquery.com/jquery-3.6.0.min.js" /> */}
         <Script src="https://code.highcharts.com/maps/highmaps.js" />
         <Script src="https://code.highcharts.com/maps/modules/map.js" />
         <Script src="https://code.highcharts.com/mapdata/index.js" />
         <Script src="https://code.highcharts.com/modules/marker-clusters.js" />
-        {/* <Script src="./proj4.js" />
-        <Script src="./nodemaps.js" /> */}
       </head>
       <body className={inter.variable}>
         <Web3ReactConfig>

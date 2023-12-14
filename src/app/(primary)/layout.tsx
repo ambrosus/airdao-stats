@@ -2,21 +2,19 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-// @ts-ignore
+
 import { Header } from '@airdao/ui-library';
 import { useWeb3React } from '@web3-react/core';
-// @ts-ignore
 import {
   useAuthorization,
   useAutoLogin,
 } from 'airdao-components-and-tools/hooks';
-// @ts-ignore
+
 import {
   metamaskConnector,
   walletconnectConnector,
 } from 'airdao-components-and-tools/utils';
 
-// @ts-ignore
 const readProvider = new ethers.providers.JsonRpcProvider(
   process.env.NEXT_PUBLIC_EXPLORER_NETWORK
 );

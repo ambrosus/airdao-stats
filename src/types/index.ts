@@ -10,6 +10,13 @@ export interface ISearch {
   setValue: any;
 }
 
+export interface IApolloInfo {
+  connecting: number;
+  offline: number;
+  online: number;
+  total: number;
+}
+
 export interface IApolloNode {
   account: {
     [key: string]: any;

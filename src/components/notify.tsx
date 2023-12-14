@@ -1,4 +1,5 @@
 import InfoIcon from '@/components/icons/info-icon';
+import AnchorLink from '@/components/ui/links/anchor-link';
 
 const Notify = () => {
   return (
@@ -9,8 +10,11 @@ const Notify = () => {
       <p>
         Node Tracker shows statistics of detected nodes running on the network.
         Statistics include the list of continents with the stake size, world map
-        and decentralization of the AirDAO project... Learn more in AirDAO
-        Academy.
+        and decentralization of the AirDAO project...{' '}
+        <AnchorLink target="_blank" href="https://airdao.io/academy">
+          Learn more in AirDAO Academy
+        </AnchorLink>
+        .
       </p>
     </div>
   );

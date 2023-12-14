@@ -1,12 +1,11 @@
-import { INode } from '@/types';
+import { IApolloInfo, INode } from '@/types';
 
 export type DataValues = {
   nodes: INode[];
   bestBlock: number;
   lastBlock: number;
   avgBlockTime: number;
-  nodesTotal: number;
-  nodesActive: number;
+  apolloInfo: IApolloInfo;
   bestStats: {
     [key: string]: any;
   };

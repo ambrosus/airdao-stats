@@ -5,7 +5,7 @@ import { useData } from '@/contexts/data/use-data';
 import { avgTimeFilter, gasPriceFilter } from '@/lib/helpers/table';
 
 const ActiveList = () => {
-  const { nodesActive, nodesTotal, bestStats, latency } = useData();
+  const { apolloInfo, bestStats, latency } = useData();
   const [avgBlockTime, setAvgBlockTime] = useState(0);
 
   // useEffect(() => {
@@ -25,7 +25,7 @@ const ActiveList = () => {
     <div className="flex flex-wrap items-center [&>*:not(:last-child)]:basis-1/5 justify-around">
       <ListItem
         title="Active Nodes"
-        value={`${nodesActive}/${nodesTotal}`}
+        value={`${apolloInfo.online}/${apolloInfo.total}`}
         className="flex-col"
       />
       <ListItem title="Gas Price" value={gasPrice} className="flex-col" />

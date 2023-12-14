@@ -1,7 +1,14 @@
 import { IContinentItem } from '@/types';
+import Loader from '@/components/ui/loader';
 import List from './list';
 
-const WidgetList = ({ data }: { data: IContinentItem[] }) => {
+const WidgetList = ({
+  data,
+  isLoading,
+}: {
+  data: IContinentItem[];
+  isLoading: boolean;
+}) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-between mb-5">
@@ -12,7 +19,13 @@ const WidgetList = ({ data }: { data: IContinentItem[] }) => {
           Stake Sizes
         </span>
       </div>
-      {data.length > 0 && <List data={data} />}
+      <div className="flex items-center justify-center min-h-[155px]">
+        {isLoading ? (
+          <Loader variant="scaleUp" />
+        ) : (
+          data.length > 0 && <List data={data} />
+        )}
+      </div>
     </div>
   );
 };

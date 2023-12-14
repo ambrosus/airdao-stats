@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import _ from 'lodash';
 
-import WidgetList from '@/components/widget-list';
 import { useData } from '@/contexts/data/use-data';
 import { IContinentItem, ICountryNode, IGeoNode } from '@/types';
 import {
@@ -11,7 +10,8 @@ import {
   getGeos,
   groupedByCountry,
 } from '@/utils';
-import Loader from '../ui/loader';
+import WidgetList from '@/components/widget-list';
+import Loader from '@/components/ui/loader';
 
 const baseMapPath =
   'https://code.highcharts.com/mapdata/custom/world.topo.json';
@@ -193,7 +193,7 @@ const MapChart = () => {
         </div>
       </div>
       <div className="panel !p-8 col-span-1">
-        <WidgetList data={continents} />
+        <WidgetList isLoading={isLoading} data={continents} />
       </div>
     </>
   );

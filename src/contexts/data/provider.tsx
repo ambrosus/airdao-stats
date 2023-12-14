@@ -8,8 +8,9 @@ import _ from 'lodash';
 import * as Toast from '@/config/toast';
 import { latencyFilter } from '@/lib/helpers/table';
 import DataContext from './context';
-import { IApolloNode, INode } from '@/types';
-import { getApollos } from '@/services/apollo.service';
+import { INode } from '@/types';
+import useGetNodes from '@/lib/hooks/use-get-nodes';
+import useGetApolloInfo from '@/lib/hooks/use-get-apollo-info';
 
 const MAX_BINS = 40;
 const baseApiUrl = process.env.NEXT_PUBLIC_API_ENDPOINT;
@@ -17,12 +18,11 @@ const socketUrl = `${baseApiUrl}/client`;
 
 const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const didUnmount = useRef(false);
-  const [nodes, setNodes] = useState<INode[]>([]);
-  const [apollosNodes, setApollosNodes] = useState<IApolloNode[]>([]);
+
   const [incomeNodes, setIncomeNodes] = useState<INode[]>([]);
-  const [nodesTotal, setNodesTotal] = useState(0);
+  const { apolloInfo } = useGetApolloInfo();
+  const { nodes } = useGetNodes(incomeNodes);
   const [bestBlock, setBestBlock] = useState(0);
-  const [nodesActive, setNodesActive] = useState(0);
   const [bestStats, setBestStats] = useState({
     gasPrice: '0',
     block: {
@@ -33,9 +33,7 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [lastBlock, setLastBlock] = useState(0);
   const [latency, setLatency] = useState(0);
   const [avgBlockTime, setAvgBlockTime] = useState(0);
-  // let lastDifficulty;
   let blockPropagationChart: any;
-  // let blockPropagationAvg;
   let uncleCount: any;
   let uncleCountChart: any;
   let avgHashrate: any;
@@ -46,46 +44,6 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   let gasSpending: any;
   let pinned = [];
   let miners: any = [];
-
-  useEffect(() => {
-    if (apollosNodes.length > 0 && incomeNodes.length > 0) {
-      const result: any = apollosNodes.map((node) => {
-        const matchingObj = incomeNodes.find((incomeNode) => {
-          return (
-            incomeNode.id.replace('apollo', '').toLowerCase() ===
-            node.address.toLowerCase()
-          );
-        });
-
-        if (matchingObj) {
-          return { ...matchingObj, stake: node.stake };
-        }
-        return node;
-      });
-
-      if (result.length > 0) {
-        setNodes(result);
-        setNodesActive(result.length);
-      }
-    }
-  }, [apollosNodes, incomeNodes]);
-
-  useEffect(() => {
-    (async function () {
-      try {
-        const response = await getApollos({
-          sort: 'totalBundles',
-          page: '',
-          limit: 200,
-        });
-        if (response?.data) {
-          setApollosNodes(response.data);
-        }
-      } catch (e) {
-        console.error('Error while getApollos: ', e);
-      }
-    })();
-  }, []);
 
   const { sendMessage } = useWebSocket(socketUrl, {
     onOpen: () => {
@@ -279,7 +237,6 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         break;
       case 'blockPropagationChart':
         blockPropagationChart = data.histogram;
-        // blockPropagationAvg = data.avg;
         break;
       case 'uncleCount':
         uncleCount = uncleCount.data[0] + uncleCount.data[1];
@@ -313,7 +270,6 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
         if (!_.isEqual(blockPropagationChart, data.propagation.histogram)) {
           blockPropagationChart = data.propagation.histogram;
-          // blockPropagationAvg = data.propagation.avg;
         }
 
         data.uncleCount.reverse();
@@ -342,7 +298,6 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
         if (!_.isEqual(miners, data.miners)) {
           miners = data.miners;
-          //getMinersNames();
         }
         break;
       case 'inactive':
@@ -401,12 +356,6 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
   const updateActiveNodes = () => {
     updateBestBlock();
-    setNodesTotal(incomeNodes.length);
-    const data = _.filter(incomeNodes, (node) => {
-      return node.stats.active === true;
-    }).length;
-
-    // setNodesActive(data);
   };
 
   const updateBestBlock = () => {
@@ -425,7 +374,6 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         setBestStats(data);
 
         bestStats && setLastBlock(bestStats?.block.arrived);
-        // lastDifficulty = bestStats && bestStats.block.difficulty;
       }
     }
   };
@@ -468,8 +416,7 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
     bestBlock,
     lastBlock,
     avgBlockTime,
-    nodesTotal,
-    nodesActive,
+    apolloInfo,
     bestStats,
     latency,
   };

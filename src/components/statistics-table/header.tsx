@@ -13,12 +13,12 @@ const TableHeader = ({
   pageCount: number;
 }) => {
   const [value, setValue] = useState<string>('');
-  const { nodesActive } = useData();
+  const { apolloInfo } = useData();
 
   return (
     <div className="mb-8 flex items-center justify-between">
       <div>
-        <h4>A total of {nodesActive} nodes</h4>
+        <h4>A total of {apolloInfo.online} nodes</h4>
       </div>
       <div className="flex flex-wrap items-center gap-8">
         <SearchInput value={value} setValue={setValue} />

@@ -5,7 +5,6 @@ import ActiveList from '@/components/block-list/active-list';
 import MapChart from '@/components/map-chart';
 import Notify from '@/components/notify';
 import StatisticsTable from '@/components/statistics-table';
-import Widget from '@/components/widget';
 
 export default function Home() {
   return (
@@ -26,12 +25,7 @@ export default function Home() {
       </div>
       <div className="mb-16">
         <div className="grid grid-cols-4 gap-5 mb-4 items-start">
-          <div className="panel !px-3 !py-5 col-span-3">
-            <MapChart />
-          </div>
-          <div className="panel !p-8 col-span-1">
-            <Widget />
-          </div>
+          <MapChart />
         </div>
       </div>
       <StatisticsTable />

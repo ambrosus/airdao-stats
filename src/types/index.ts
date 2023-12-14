@@ -15,20 +15,82 @@ export interface ISearch {
   setValue: any;
 }
 
+export interface IApolloNode {
+  account: {
+    [key: string]: any;
+  };
+  address: string;
+  balance: {
+    [key: string]: any;
+  };
+  lastBlock: {
+    [key: string]: any;
+  };
+  onboardingBlock: {
+    [key: string]: any;
+  };
+  onboardingDate: number;
+  stake: {
+    [key: string]: any;
+  };
+  state: string;
+  stateHistory: [];
+  status: string;
+  statusHistory: [];
+  totalBlocks: number;
+  totalTransactions: number;
+  version: string;
+}
+
 export interface INode {
+  geo: {
+    country: string;
+    area: number;
+    city: string;
+    eu: string;
+    ll: number[];
+    metro: number;
+    range: number[];
+    region: string;
+    timezone: string;
+  };
+  history: number[];
+  id: string;
   info: {
     [key: string]: any;
+  };
+  pinned?: boolean;
+  readable: {
+    [key: string]: any;
+  };
+  spark: string;
+  stake: {
+    ether: number;
   };
   stats: {
     [key: string]: any;
   };
-  geo: {
+  trusted: boolean;
+  uptime: {
     [key: string]: any;
   };
-  readable: {
-    [key: string]: any;
-  };
-  history: {
-    [key: string]: any;
-  };
+}
+
+export interface IGeoNode {
+  color: string;
+  lat: number;
+  lon: number;
+  stake: number;
+  count: number;
+}
+
+export interface ICountryNode {
+  key: string;
+  stake: number;
+  value: number;
+}
+
+export interface IContinentItem {
+  continent: string;
+  stakeSizes: string;
 }

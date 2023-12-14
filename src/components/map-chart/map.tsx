@@ -1,100 +1,82 @@
 import { useState, useEffect } from 'react';
 import _ from 'lodash';
 
+// import { ethers } from 'ethers';
+// import { Number } from '@/lib/helpers/number';
 // import Highcharts from 'highcharts';
 // import HighchartsReact from 'highcharts-react-official';
 // import highchartsMap from 'highcharts/modules/map';
 // import mapDataIE from '@highcharts/map-collection/countries/ie/ie-all.geo.json';
 // highchartsMap(Highcharts);
 
+import WidgetList from '@/components/widget-list';
 import { useData } from '@/contexts/data/use-data';
+import { ICountryNode, IGeoNode } from '@/types';
+import {
+  calculateContinentStake,
+  formatEtherAmount,
+  getGeos,
+  groupedByCountry,
+} from '@/utils';
+import Loader from '../ui/loader';
 
-function filterUniqueByKey(array, key) {
-  const seen = new Set();
-  return array.filter((obj) => {
-    const value = obj[key];
-    if (!seen.has(value)) {
-      seen.add(value);
-      return true;
-    }
-    return false;
-  });
-}
-
-function getGeos(nodes) {
-  // const pinned = JSON.parse(localStorage.pinned);
-
-  const result = nodes.reduce((geos, node, i) => {
-    return geos.concat({
-      // address: node.info.name,
-      // name: node.info.node,
-      // id: node.id,
-      // pinned: pinned.some((pin) => {
-      //   const value = node.info.name.match(new RegExp('\\S+$', 'g'))[0];
-      //   return new RegExp(value, 'i').test(pin);
-      // }),
-
-      key: _.get(node, 'geo.country').toLowerCase(),
-      lat: _.get(node, 'geo.ll', [])[0],
-      lon: _.get(node, 'geo.ll', [])[1],
-      name: node.info.name.slice(-5),
-      // coordinates: [_.get(node, 'geo.ll', [])[1], _.get(node, 'geo.ll', [])[0]],
-    });
-  }, []);
-
-  return filterUniqueByKey(result, 'lat');
-  // .sort((a, b) => {
-  //   return a.pinned < b.pinned ? -1 : 0;
-  // });
-}
+const baseMapPath =
+  'https://code.highcharts.com/mapdata/custom/world.topo.json';
 
 const MapChart = () => {
-  const { nodes, bestBlock } = useData();
-  const [markers, setMarkers] = useState([]);
-
-  console.log('markers: ', markers);
+  const { nodes } = useData();
+  const [isLoading, setIsLoading] = useState(true);
+  const [markers, setMarkers] = useState<IGeoNode[]>([]);
+  const [continents, setContinents] = useState([]);
+  const [countries, setCountries] = useState<ICountryNode[]>([]);
 
   useEffect(() => {
     if (nodes.length > 0) {
       setMarkers(getGeos(nodes));
+      setCountries(Object.values(groupedByCountry(nodes)));
     }
   }, [nodes]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const baseMapPath = 'https://code.highcharts.com/mapdata/';
-
-        const topologyResponse = await fetch(
-          `${baseMapPath}custom/world.topo.json`
-        );
+        const topologyResponse = await fetch(baseMapPath);
         const mapData = await topologyResponse.json();
 
-        const data = mapData.objects.default.geometries.map((g, value) => ({
-          key: g.properties['hc-key'],
-          value,
-        }));
+        setContinents(calculateContinentStake(mapData, countries));
 
-        // console.log(
-        //   'data: ',
-        //   mapData.objects.default.geometries.map((g, value) => {
-        //     console.log('vaava; ', value);
-        //   })
-        // );
-
-        Highcharts.mapChart('container', {
+        Highcharts.mapChart('map-container', {
           chart: {
             map: mapData,
+          },
+          credits: {
+            enabled: false,
           },
           title: null,
           subtitle: null,
           mapNavigation: {
             enabled: true,
+            align: 'right',
+            buttonOptions: {
+              align: 'right',
+              verticalAlign: 'bottom',
+            },
           },
           tooltip: {
             headerFormat: '',
-            pointFormat:
-              '<span>{point.name}</span>&nbsp;<b>{point.country}</b><br>Lat: {point.lat:.2f}, Lon: {point.lon:.2f}',
+            pointFormatter: function () {
+              return (
+                '<b>' +
+                this.name +
+                '</b><br>' +
+                'Nodes: ' +
+                this.value +
+                '<br>' +
+                'Total Stake: ' +
+                formatEtherAmount(this.stake)
+              );
+            },
+            clusterFormat: 'Clustered points: {point.clusterPointsAmount}',
           },
           colorAxis: {
             min: 0,
@@ -104,7 +86,7 @@ const MapChart = () => {
               [
                 1,
                 Highcharts.color(Highcharts.getOptions().colors[0])
-                  .brighten(-0.5)
+                  .brighten(-0.2)
                   .get(),
               ],
             ],
@@ -159,6 +141,16 @@ const MapChart = () => {
                   },
                 ],
               },
+              tooltip: {
+                pointFormatter: function () {
+                  return (
+                    'Nodes: ' +
+                    this.count +
+                    '<br>Total Stake: ' +
+                    formatEtherAmount(this.stake)
+                  );
+                },
+              },
             },
           },
           legend: {
@@ -167,59 +159,22 @@ const MapChart = () => {
             verticalAlign: 'bottom',
           },
           series: [
-            // {
-            //   name: 'World',
-            //   accessibility: {
-            //     exposeAsGroupOnly: true,
-            //   },
-            //   borderColor: '#A0A0A0',
-            //   nullColor: 'rgba(177, 244, 177, 0.5)',
-            //   showInLegend: false,
-            // },
             {
-              data,
+              data: countries,
               mapData: mapData,
               joinBy: ['hc-key', 'key'],
-              name: 'Random data',
-              // dataLabels: {
-              //   enabled: false,
-              //   style: {
-              //     fontWeight: 100,
-              //     fontSize: '10px',
-              //     textOutline: 'none',
-              //   },
-              // },
-            },
-            {
-              type: 'mapline',
-              name: 'Lines',
-              accessibility: {
-                enabled: false,
-              },
-              // /*
-              // data: [{
-              //     geometry: mapData.objects.default['hc-recommended-mapview'].insets[0].geoBounds
-              // }],
-              // // */
-              nullColor: '#333',
-              showInLegend: false,
-              enableMouseTracking: false,
+              name: 'Data',
             },
             {
               type: 'mappoint',
               name: 'Nodes',
+              color: Highcharts.getOptions().colors[0],
               enableMouseTracking: true,
-              accessibility: {
-                point: {
-                  descriptionFormat:
-                    '{#if isCluster}' +
-                    'Grouping of {clusterPointsAmount} points.' +
-                    '{else}' +
-                    '{name}, country code: {country}.' +
-                    '{/if}',
-                },
-              },
-              // colorKey: 'clusterPointsAmount',
+              // marker: {
+              //   fillColor: '#ff5e0d',
+              //   radius: 6,
+              //   symbol: 'circle',
+              // },
               data: markers,
               dataLabels: {
                 verticalAlign: 'top',
@@ -232,15 +187,23 @@ const MapChart = () => {
       }
     };
 
-    if (markers.length > 0) {
+    if (markers.length > 0 && countries.length > 0) {
       fetchData();
+      setIsLoading(false);
     }
-  }, [markers]);
+  }, [markers, countries]);
 
   return (
-    <div id="countries" style={{ minHeight: '500px' }}>
-      <div id="container"></div>
-    </div>
+    <>
+      <div className="panel !px-3 !py-5 col-span-3">
+        <div className="flex items-center justify-center" id="map-container">
+          {isLoading && <Loader variant="scaleUp" />}
+        </div>
+      </div>
+      <div className="panel !p-8 col-span-1">
+        <WidgetList data={continents} />
+      </div>
+    </>
   );
 };
 

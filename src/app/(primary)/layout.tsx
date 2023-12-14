@@ -1,5 +1,5 @@
+// @ts-nocheck
 'use client';
-
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 // @ts-ignore

@@ -1,4 +1,5 @@
 import { WidgetListItem } from '@/types';
+import { formatEtherAmount } from '@/utils';
 
 const ListItem = ({
   item,
@@ -15,7 +16,7 @@ const ListItem = ({
         {index + 1}
         <span className="ml-4">{continent}</span>
       </span>
-      <span>{stakeSizes}</span>
+      <span>{formatEtherAmount(stakeSizes)}</span>
     </li>
   );
 };

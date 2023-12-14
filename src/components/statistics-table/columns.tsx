@@ -27,7 +27,7 @@ const columns = [
       </span>
     ),
     cell: (info) => {
-      return <a href="#">{shortenAddress(info.getValue())}</a>;
+      return <a href="#">{info.getValue().replace('apollo', '')}</a>;
     },
   }),
   // columnHelper.accessor('info.node', {
@@ -45,13 +45,13 @@ const columns = [
     ),
     cell: (info) => info.getValue() || '--',
   }),
-  columnHelper.accessor('info.ip', {
-    header: () => (
-      <span className="flex items-center">
-        Host <InfoSmallIcon className="ml-1" />
-      </span>
-    ),
-  }),
+  // columnHelper.accessor('info.ip', {
+  //   header: () => (
+  //     <span className="flex items-center">
+  //       Host <InfoSmallIcon className="ml-1" />
+  //     </span>
+  //   ),
+  // }),
   columnHelper.accessor('readable.latency', {
     header: () => <LatencyIcon className="mx-auto" />,
     cell: (info) => <div className="text-center">{info.getValue()}</div>,

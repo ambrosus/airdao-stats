@@ -1,6 +1,7 @@
+import { IContinentItem } from '@/types';
 import List from './list';
 
-const Widget = () => {
+const WidgetList = ({ data }: { data: IContinentItem[] }) => {
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-between mb-5">
@@ -11,9 +12,9 @@ const Widget = () => {
           Stake Sizes
         </span>
       </div>
-      <List />
+      {data.length > 0 && <List data={data} />}
     </div>
   );
 };
 
-export default Widget;
+export default WidgetList;

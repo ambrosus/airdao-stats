@@ -32,12 +32,12 @@ export function RangeList({ table }) {
           leaveFrom="opacity-100 -translate-y-0"
           leaveTo="opacity-0 translate-y-2"
         >
-          <Listbox.Options className="absolute w-full right-0 pt-1 pb-1 z-10 mt-2 rounded-lg origin-top-right bg-white border border-solid border-black-600/10">
+          <Listbox.Options className="absolute w-full right-0 pt-2 pb-2 z-10 mt-2 rounded-xl origin-top-right bg-white border border-solid border-black-600/10">
             {rangeList.map((value) => (
               <Listbox.Option key={value} value={value}>
                 {({ selected }) => (
                   <div
-                    className={`block cursor-pointer px-4 py-1 text-base font-medium text-gray-900 transition ${
+                    className={`block cursor-pointer px-4 py-2 text-base font-medium text-gray-900 transition ${
                       selected ? 'bg-black-600/10' : 'hover:bg-black-600/10'
                     }`}
                   >

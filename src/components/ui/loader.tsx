@@ -29,7 +29,7 @@ export default function Loader({
 }: LoaderTypes) {
   let Component = tag;
   return (
-    <Component className={cn('flex items-center gap-2', className)}>
+    <Component className={cn('flex gap-2', className)}>
       <span
         className={cn(
           'bg-neutral-100 rounded-full',

@@ -2,156 +2,156 @@ import cn from 'clsx';
 
 import ArrowRight from '@/components/icons/arrow-right-icon';
 
-const PageView = (props) => {
-  const {
-    page,
-    selected,
-    getEventListener,
-    pageSelectedHandler,
-    pageLabelBuilder,
-  } = props;
+// const PageView = (props) => {
+//   const {
+//     page,
+//     selected,
+//     getEventListener,
+//     pageSelectedHandler,
+//     pageLabelBuilder,
+//   } = props;
 
-  if (selected) {
-    return (
-      <li>
-        <a className={''} {...getEventListener(pageSelectedHandler)}>
-          {pageLabelBuilder(page)}
-        </a>
-      </li>
-    );
-  }
-};
+//   if (selected) {
+//     return (
+//       <li>
+//         <a className={''} {...getEventListener(pageSelectedHandler)}>
+//           {pageLabelBuilder(page)}
+//         </a>
+//       </li>
+//     );
+//   }
+// };
 
-const getPageElement = (index) => {
-  const selected = 1;
+// const getPageElement = (index) => {
+//   const selected = 1;
 
-  return (
-    <PageView
-      key={index}
-      pageSelectedHandler={handlePageSelected.bind(null, index)}
-      selected={selected === index}
-      page={index + 1}
-      getEventListener={getEventListener}
-    />
-  );
-};
+//   return (
+//     <PageView
+//       key={index}
+//       pageSelectedHandler={handlePageSelected.bind(null, index)}
+//       selected={selected === index}
+//       page={index + 1}
+//       getEventListener={getEventListener}
+//     />
+//   );
+// };
 
-const pagination = (pageCount) => {
-  const items = [];
-  const pageRangeDisplayed = 5;
-  const marginPagesDisplayed = 2;
-  const breakLabel = '...';
-  const breakAriaLabels = {
-    forward: 'Jump forward',
-    backward: 'Jump backward',
-  };
+// const pagination = (pageCount) => {
+//   const items = [];
+//   const pageRangeDisplayed = 5;
+//   const marginPagesDisplayed = 2;
+//   const breakLabel = '...';
+//   const breakAriaLabels = {
+//     forward: 'Jump forward',
+//     backward: 'Jump backward',
+//   };
 
-  const breakClassName = '';
-  const selected = 1;
+//   const breakClassName = '';
+//   const selected = 1;
 
-  if (pageCount <= pageRangeDisplayed) {
-    for (let index = 0; index < pageCount; index++) {
-      items.push(getPageElement(index));
-    }
-  } else {
-    let leftSide = pageRangeDisplayed / 2;
-    let rightSide = pageRangeDisplayed - leftSide;
+//   if (pageCount <= pageRangeDisplayed) {
+//     for (let index = 0; index < pageCount; index++) {
+//       items.push(getPageElement(index));
+//     }
+//   } else {
+//     let leftSide = pageRangeDisplayed / 2;
+//     let rightSide = pageRangeDisplayed - leftSide;
 
-    if (selected > pageCount - pageRangeDisplayed / 2) {
-      rightSide = pageCount - selected;
-      leftSide = pageRangeDisplayed - rightSide;
-    } else if (selected < pageRangeDisplayed / 2) {
-      leftSide = selected;
-      rightSide = pageRangeDisplayed - leftSide;
-    }
+//     if (selected > pageCount - pageRangeDisplayed / 2) {
+//       rightSide = pageCount - selected;
+//       leftSide = pageRangeDisplayed - rightSide;
+//     } else if (selected < pageRangeDisplayed / 2) {
+//       leftSide = selected;
+//       rightSide = pageRangeDisplayed - leftSide;
+//     }
 
-    let createPageView = (index) => getPageElement(index);
-    let index;
-    let breakView;
+//     let createPageView = (index) => getPageElement(index);
+//     let index;
+//     let breakView;
 
-    const pagesBreaking: any = [];
-    for (index = 0; index < pageCount; index++) {
-      const page = index + 1;
+//     const pagesBreaking: any = [];
+//     for (index = 0; index < pageCount; index++) {
+//       const page = index + 1;
 
-      if (page <= marginPagesDisplayed) {
-        pagesBreaking.push({
-          type: 'page',
-          index,
-          display: createPageView(index),
-        });
-        continue;
-      }
+//       if (page <= marginPagesDisplayed) {
+//         pagesBreaking.push({
+//           type: 'page',
+//           index,
+//           display: createPageView(index),
+//         });
+//         continue;
+//       }
 
-      if (page > pageCount - marginPagesDisplayed) {
-        pagesBreaking.push({
-          type: 'page',
-          index,
-          display: createPageView(index),
-        });
-        continue;
-      }
+//       if (page > pageCount - marginPagesDisplayed) {
+//         pagesBreaking.push({
+//           type: 'page',
+//           index,
+//           display: createPageView(index),
+//         });
+//         continue;
+//       }
 
-      const adjustedRightSide =
-        selected === 0 && pageRangeDisplayed > 1 ? rightSide - 1 : rightSide;
+//       const adjustedRightSide =
+//         selected === 0 && pageRangeDisplayed > 1 ? rightSide - 1 : rightSide;
 
-      if (
-        index >= selected - leftSide &&
-        index <= selected + adjustedRightSide
-      ) {
-        pagesBreaking.push({
-          type: 'page',
-          index,
-          display: createPageView(index),
-        });
-        continue;
-      }
+//       if (
+//         index >= selected - leftSide &&
+//         index <= selected + adjustedRightSide
+//       ) {
+//         pagesBreaking.push({
+//           type: 'page',
+//           index,
+//           display: createPageView(index),
+//         });
+//         continue;
+//       }
 
-      if (
-        breakLabel &&
-        pagesBreaking.length > 0 &&
-        pagesBreaking[pagesBreaking.length - 1].display !== breakView &&
-        (pageRangeDisplayed > 0 || marginPagesDisplayed > 0)
-      ) {
-        const useBreakAriaLabel =
-          index < selected ? breakAriaLabels.backward : breakAriaLabels.forward;
-        breakView = (
-          <BreakView
-            key={index}
-            breakAriaLabel={useBreakAriaLabel}
-            breakLabel={breakLabel}
-            breakClassName={breakClassName}
-            breakLinkClassName={''}
-            breakHandler={this.handleBreakClick.bind(null, index)}
-            getEventListener={this.getEventListener}
-          />
-        );
-        pagesBreaking.push({ type: 'break', index, display: breakView });
-      }
-    }
-    // Second pass: we remove breaks containing one page to the actual page.
-    pagesBreaking.forEach((pageElement, i) => {
-      let actualPageElement = pageElement;
-      if (
-        pageElement.type === 'break' &&
-        pagesBreaking[i - 1] &&
-        pagesBreaking[i - 1].type === 'page' &&
-        pagesBreaking[i + 1] &&
-        pagesBreaking[i + 1].type === 'page' &&
-        pagesBreaking[i + 1].index - pagesBreaking[i - 1].index <= 2
-      ) {
-        actualPageElement = {
-          type: 'page',
-          index: pageElement.index,
-          display: createPageView(pageElement.index),
-        };
-      }
-      // We add the displayed elements in the same pass, to avoid another iteration.
-      items.push(actualPageElement.display);
-    });
-  }
+//       if (
+//         breakLabel &&
+//         pagesBreaking.length > 0 &&
+//         pagesBreaking[pagesBreaking.length - 1].display !== breakView &&
+//         (pageRangeDisplayed > 0 || marginPagesDisplayed > 0)
+//       ) {
+//         const useBreakAriaLabel =
+//           index < selected ? breakAriaLabels.backward : breakAriaLabels.forward;
+//         breakView = (
+//           <BreakView
+//             key={index}
+//             breakAriaLabel={useBreakAriaLabel}
+//             breakLabel={breakLabel}
+//             breakClassName={breakClassName}
+//             breakLinkClassName={''}
+//             breakHandler={this.handleBreakClick.bind(null, index)}
+//             getEventListener={this.getEventListener}
+//           />
+//         );
+//         pagesBreaking.push({ type: 'break', index, display: breakView });
+//       }
+//     }
+//     // Second pass: we remove breaks containing one page to the actual page.
+//     pagesBreaking.forEach((pageElement, i) => {
+//       let actualPageElement = pageElement;
+//       if (
+//         pageElement.type === 'break' &&
+//         pagesBreaking[i - 1] &&
+//         pagesBreaking[i - 1].type === 'page' &&
+//         pagesBreaking[i + 1] &&
+//         pagesBreaking[i + 1].type === 'page' &&
+//         pagesBreaking[i + 1].index - pagesBreaking[i - 1].index <= 2
+//       ) {
+//         actualPageElement = {
+//           type: 'page',
+//           index: pageElement.index,
+//           display: createPageView(pageElement.index),
+//         };
+//       }
+//       // We add the displayed elements in the same pass, to avoid another iteration.
+//       items.push(actualPageElement.display);
+//     });
+//   }
 
-  return items;
-};
+//   return items;
+// };
 
 const Paginate = ({ table, pageCount }) => {
   return (

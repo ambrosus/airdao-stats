@@ -101,6 +101,22 @@ export const propagationTimeClass = (stats, bestBlock) => {
   return 'danger';
 };
 
+export const propagationNodeAvgTimeClass = (stats, bestBlock) => {
+  if (!stats.active) return 'gray';
+
+  if (stats.block.number < bestBlock) return 'gray';
+
+  if (stats.propagationAvg === 0) return 'info';
+
+  if (stats.propagationAvg < 1000) return 'success';
+
+  if (stats.propagationAvg < 3000) return 'warning';
+
+  if (stats.propagationAvg < 7000) return 'orange';
+
+  return 'danger';
+};
+
 export const blockTimeFilter = (timestamp) => {
   if (timestamp === 0) return '∞';
 

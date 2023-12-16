@@ -8,7 +8,7 @@ const config: Config = {
   ],
   safelist: [
     {
-      pattern: /bg-(success|info|warning|orange|danger|gray)-(100)/, // You can display all the colors that you need
+      pattern: /bg|text-(success|info|warning|orange|danger|gray)-(100)/, // You can display all the colors that you need
       variants: [],
     },
   ],
@@ -68,7 +68,7 @@ const config: Config = {
     },
     extend: {
       maxWidth: {
-        'screen-xl': '1300px',
+        'screen-xl': 'var(--container-width)',
       },
       lineHeight: {
         6.5: '1.625rem',

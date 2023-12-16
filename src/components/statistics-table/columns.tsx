@@ -16,6 +16,7 @@ import {
   blockPropagationAvgFilter,
   blockPropagationFilter,
   lastBlockTime,
+  propagationNodeAvgTimeClass,
   propagationTimeClass,
 } from '@/lib/helpers/table';
 
@@ -31,7 +32,7 @@ const columns = [
     cell: (info) => {
       return (
         <span className="text-blue-100">
-          {info.getValue().replace('apollo', '')}
+          {info.getValue()?.replace('apollo', '')}
         </span>
       );
     },
@@ -64,14 +65,16 @@ const columns = [
     ),
     cell: (info) => `#${info.getValue()}`,
   }),
-  columnHelper.accessor('stats.block.hash', {
+  columnHelper.accessor('stats.block', {
     header: () => (
       <span className="flex items-center">
         Tx Hash <InfoSmallIcon className="ml-1" />
       </span>
     ),
     cell: (info) => (
-      <span className="text-blue-100">{shortenAddress(info.getValue())}</span>
+      <span className="text-blue-100">
+        {info.getValue() && shortenAddress(info.getValue().hash)}
+      </span>
     ),
   }),
   columnHelper.accessor('stats.block.received', {
@@ -85,6 +88,8 @@ const columns = [
     header: () => <PropTimeIcon className="mx-auto" />,
     cell: (info) => {
       const stats = info.getValue();
+
+      if (!stats) return <div></div>;
       const propClass = propagationTimeClass(stats, stats.block.number);
 
       return (
@@ -103,14 +108,23 @@ const columns = [
   columnHelper.accessor('stats', {
     id: 'stats.two',
     header: () => <AverageIcon className="mx-auto" />,
-    cell: (info) => (
-      <div className="text-center">
-        {blockPropagationAvgFilter(
-          info.getValue(),
-          info.getValue().block.number
-        )}
-      </div>
-    ),
+    cell: (info) => {
+      if (!info.getValue()) return '-';
+
+      return (
+        <div
+          className={cn(
+            'text-center',
+            `text-${propagationNodeAvgTimeClass(info.getValue())}-100`
+          )}
+        >
+          {blockPropagationAvgFilter(
+            info.getValue(),
+            info.getValue().block.number
+          )}
+        </div>
+      );
+    },
   }),
 ];
 

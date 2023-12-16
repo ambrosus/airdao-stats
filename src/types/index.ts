@@ -1,8 +1,9 @@
 export type BlockListItem = {
   title: string;
   value: string;
-  icon?: React.FC;
+  icon?: React.FC<{ className?: string }>;
   className?: string;
+  valueClassName?: string;
 };
 
 export interface ISearch {

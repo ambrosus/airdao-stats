@@ -159,11 +159,6 @@ const MapChart = () => {
               name: 'Nodes',
               color: Highcharts.getOptions().colors[0],
               enableMouseTracking: true,
-              // marker: {
-              //   fillColor: '#ff5e0d',
-              //   radius: 6,
-              //   symbol: 'circle',
-              // },
               data: markers,
               dataLabels: {
                 verticalAlign: 'top',

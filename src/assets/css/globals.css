@@ -21,7 +21,7 @@
     --color-info: 16 160 222;
     --color-gray: 119 119 119;
 
-    --container-width: 1300px;
+    --container-width: 1340px;
   }
 
   html,
@@ -43,7 +43,7 @@
   }
 
   h6 {
-    @apply text-sm;
+    @apply text-xs lg:text-sm;
   }
 
   p {
@@ -55,22 +55,13 @@
   }
 
   #map-container {
-    height: 485px;
-    width: 100%;
-  }
-
-  .color-bg-success {
-    background-color: var(--color-success);
+    @apply h-[300px] sm:h-[485px] w-full;
   }
 }
 
 @layer utilities {
   .panel {
-    @apply py-6 px-10 bg-white border border-solid border-black-200 rounded-4xl;
-  }
-
-  .inset-c {
-    @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+    @apply py-6 px-6 md:px-10 bg-white border border-solid border-black-200 rounded-4xl;
   }
 
   .round {

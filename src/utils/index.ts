@@ -72,12 +72,12 @@ export function getGeos(nodes: INode[]) {
 
 export const groupedByCountry = (nodes: INode[]) => {
   const modifyNodes = nodes.reduce((acc, obj) => {
-    const country = obj.geo.country;
-    const value = obj.stake?.ether;
+    const country = obj?.geo?.country;
+    const value = obj?.stake?.ether;
 
     if (!acc[country]) {
       acc[country] = {
-        key: country.toLowerCase(),
+        key: country?.toLowerCase() || '',
         value: 0,
         stake: 0,
       };
@@ -101,13 +101,6 @@ export function formatEtherAmount(etherAmount: number) {
     return etherAmount.toFixed(2);
   }
 }
-
-export const formatStake = (stake: number) => {
-  return stake.toLocaleString('en-US', {
-    minimumFractionDigits: 6,
-    maximumFractionDigits: 6,
-  });
-};
 
 export function shortenAddress(address: string, chars = 8): string {
   return `${address.replace('apollo', '').slice(0, chars)}...${address.slice(

@@ -11,7 +11,7 @@ const SearchInput = ({ value, setValue }: ISearch) => {
   };
 
   return (
-    <div className="flex items-center">
+    <div className="hidden xl:flex items-center">
       <div className="relative w-full">
         <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
           <SearchIcon />

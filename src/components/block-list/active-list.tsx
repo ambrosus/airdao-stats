@@ -1,49 +1,25 @@
-import { useState } from 'react';
-
 import ListItem from './list-item';
 import { useData } from '@/contexts/data/use-data';
 import { avgTimeFilter, gasPriceFilter } from '@/lib/helpers/table';
+import useGetBlockTime from '@/lib/hooks/use-get-block-time';
 
 const ActiveList = () => {
   const { apolloInfo, bestStats, latency } = useData();
-  const [avgBlockTime, setAvgBlockTime] = useState(0);
-
-  // useEffect(() => {
-  //   fetch('https://explorer-api.ambrosus-test.io/info/')
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       setAvgBlockTime(data.avgBlockTime);
-  //     });
-  // }, []);
+  const avgBlockTime = useGetBlockTime();
 
   const gasPrice = bestStats && gasPriceFilter(bestStats.gasPrice);
   const gasLimit = bestStats && bestStats.block.gasLimit;
 
   return (
-    <div className="flex flex-wrap items-center [&>*:not(:last-child)]:basis-1/5 justify-around">
+    <div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-5 gap-7 sm:gap-2 lg:gap-14 md:place-items-center">
       <ListItem
         title="Active Nodes"
         value={`${apolloInfo.online}/${apolloInfo.total}`}
-        className="flex-col"
       />
       <ListItem title="Gas Price" value={gasPrice} className="flex-col" />
-      <ListItem
-        title="Gas Limit"
-        value={`${gasLimit} gas`}
-        className="flex-col"
-      />
-      <ListItem
-        title="Page Latency"
-        value={`${latency} ms`}
-        className="flex-col"
-      />
-      <ListItem
-        title="Avg Block Time"
-        value={avgTimeFilter(avgBlockTime)}
-        className="flex-col"
-      />
+      <ListItem title="Gas Limit" value={`${gasLimit} gas`} />
+      <ListItem title="Page Latency" value={`${latency} ms`} />
+      <ListItem title="Avg Block Time" value={avgTimeFilter(avgBlockTime)} />
     </div>
   );
 };

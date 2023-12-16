@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import DataProvider from '@/contexts/data/provider';
 import '@/assets/css/globals.css';
+import 'overlayscrollbars/overlayscrollbars.css';
 import Web3ReactConfig from '@/components/shared/web3-config';
 
 const inter = Inter({

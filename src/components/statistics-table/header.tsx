@@ -16,11 +16,11 @@ const TableHeader = ({
   const { apolloInfo } = useData();
 
   return (
-    <div className="mb-8 flex items-center justify-between">
-      <div>
+    <div className="relative z-10 mb-8 flex flex-col sm:flex-row items-center justify-between">
+      <div className="mb-8 sm:mb-0">
         <h4>A total of {apolloInfo.online} nodes</h4>
       </div>
-      <div className="flex flex-wrap items-center gap-8">
+      <div className="flex flex-col sm:flex-row flex-wrap items-center gap-8">
         <SearchInput value={value} setValue={setValue} />
         <RangeList table={table} />
         <Pagination table={table} pageCount={pageCount} />

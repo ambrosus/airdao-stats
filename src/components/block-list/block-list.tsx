@@ -9,7 +9,7 @@ const BlockList = () => {
   const { bestBlock, lastBlock } = useData();
 
   return (
-    <div className="grid grid-cols-2 gap-10 items-center">
+    <div className="grid grid-cols-2 gap-7 md:place-items-center w-full">
       <ListItem
         title="Best Block"
         value={formatBestBlockNumber(bestBlock)}

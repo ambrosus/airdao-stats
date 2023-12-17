@@ -46,7 +46,7 @@ const StatisticsTable = () => {
     <div className="flex flex-col">
       <TableHeader table={table} pageCount={pageCount} />
       <Scrollbar style={{ width: '100%' }} autoHide="never">
-        <table className="min-w-full w-full whitespace-nowrap">
+        <table className="relative z-20 min-w-full w-full whitespace-nowrap">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>

@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
-"@airdao/ui-library@^1.1.19":
-  version "1.1.19"
-  resolved "https://registry.yarnpkg.com/@airdao/ui-library/-/ui-library-1.1.19.tgz#3137959de2531f018e7c1a4d8c4056324221be81"
-  integrity sha512-6yXmvwQEoM6LeKBSE8RIIhYa1VezxADdqD/xT6xpffL3jFVFa+5SURyHv6ht3ssFzj/cm88+cLZ7mgz+9r4rGA==
+"@airdao/ui-library@^1.1.20":
+  version "1.1.20"
+  resolved "https://registry.yarnpkg.com/@airdao/ui-library/-/ui-library-1.1.20.tgz#c4c95df7a397bfee9fa76e4e5d3a4048590e9bed"
+  integrity sha512-t/LBZeZoZGxWHeKz5s4KydrNqVeG2LWBe1jQwtoZJJWUGmdJvUtwMjmpcq2ZHP8TJ5pFFFPoDQQIL/Ts9zp7HA==
   dependencies:
     "@prismicio/client" "^7.1.1"
     "@prismicio/react" "^2.5.0"

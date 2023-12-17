@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import { createColumnHelper } from '@tanstack/react-table';
+import { Tooltip } from '@airdao/ui-library';
 import cn from 'clsx';
 
 import { shortenAddress } from '@/utils';
@@ -25,9 +26,12 @@ const columnHelper = createColumnHelper();
 const columns = [
   columnHelper.accessor('info.name', {
     header: () => (
-      <span className="flex items-center">
-        Node Hash <InfoSmallIcon className="ml-1" />
-      </span>
+      <div className="flex items-center">
+        <span className="mr-1">Node Hash</span>
+        <Tooltip message="Node Name">
+          <InfoSmallIcon />
+        </Tooltip>
+      </div>
     ),
     cell: (info) => {
       return (
@@ -39,37 +43,64 @@ const columns = [
   }),
   columnHelper.accessor('geo.country', {
     header: () => (
-      <span className="flex items-center">
-        Country <InfoSmallIcon className="ml-1" />
-      </span>
+      <div className="flex items-center">
+        <span className="mr-1">Country</span>
+        <Tooltip message="Country Name">
+          <InfoSmallIcon />
+        </Tooltip>
+      </div>
     ),
     cell: (info) => info.getValue() || '--',
   }),
   columnHelper.accessor('readable.latency', {
-    header: () => <LatencyIcon className="mx-auto" />,
+    header: () => (
+      <div className="flex justify-center">
+        <Tooltip message="Node Latency">
+          <LatencyIcon />
+        </Tooltip>
+      </div>
+    ),
     cell: (info) => <div className="text-center">{info.getValue()}</div>,
   }),
   columnHelper.accessor('stats.peers', {
-    header: () => <PeersIcon className="mx-auto" />,
+    header: () => (
+      <div className="flex justify-center">
+        <Tooltip message="Peers">
+          <PeersIcon />
+        </Tooltip>
+      </div>
+    ),
     cell: (info) => <div className="text-center">{info.getValue()}</div>,
   }),
   columnHelper.accessor('stats.pending', {
-    header: () => <PendingIcon className="mx-auto" />,
+    header: () => (
+      <div className="flex justify-center">
+        <Tooltip message="Pending Transaction">
+          <PendingIcon />
+        </Tooltip>
+      </div>
+    ),
     cell: (info) => <div className="text-center">{info.getValue()}</div>,
   }),
   columnHelper.accessor('stats.block.number', {
     header: () => (
-      <span className="flex items-center">
-        Last Block <InfoSmallIcon className="ml-1" />
-      </span>
+      <div className="flex items-center">
+        <span className="mr-1">Last Block</span>
+        <Tooltip message="Last Block">
+          <InfoSmallIcon />
+        </Tooltip>
+      </div>
     ),
     cell: (info) => `#${info.getValue()}`,
   }),
   columnHelper.accessor('stats.block', {
     header: () => (
-      <span className="flex items-center">
-        Tx Hash <InfoSmallIcon className="ml-1" />
-      </span>
+      <div className="flex items-center">
+        <span className="mr-1">Tx Hash</span>
+        <Tooltip message="Tx Hash">
+          <InfoSmallIcon />
+        </Tooltip>
+      </div>
     ),
     cell: (info) => (
       <span className="text-blue-100">
@@ -78,14 +109,26 @@ const columns = [
     ),
   }),
   columnHelper.accessor('stats.block.received', {
-    header: () => <BlockTimeIcon className="mx-auto" />,
+    header: () => (
+      <div className="flex justify-center">
+        <Tooltip message="Last Block Time">
+          <BlockTimeIcon />
+        </Tooltip>
+      </div>
+    ),
     cell: (info) => (
       <div className="text-center">{lastBlockTime(info.getValue())}</div>
     ),
   }),
   columnHelper.accessor('stats', {
     id: 'stats.one',
-    header: () => <PropTimeIcon className="mx-auto" />,
+    header: () => (
+      <div className="flex justify-center">
+        <Tooltip message="Propagation Time">
+          <PropTimeIcon />
+        </Tooltip>
+      </div>
+    ),
     cell: (info) => {
       const stats = info.getValue();
 
@@ -107,7 +150,13 @@ const columns = [
   }),
   columnHelper.accessor('stats', {
     id: 'stats.two',
-    header: () => <AverageIcon className="mx-auto" />,
+    header: () => (
+      <div className="flex justify-center">
+        <Tooltip message="Average Propagation Time">
+          <AverageIcon />
+        </Tooltip>
+      </div>
+    ),
     cell: (info) => {
       if (!info.getValue()) return '-';
 

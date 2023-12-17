@@ -2,18 +2,18 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-
 import { Header } from '@airdao/ui-library';
 import { useWeb3React } from '@web3-react/core';
 import {
   useAuthorization,
   useAutoLogin,
 } from 'airdao-components-and-tools/hooks';
-
 import {
   metamaskConnector,
   walletconnectConnector,
 } from 'airdao-components-and-tools/utils';
+
+import { useIsMounted } from '@/lib/hooks/use-is-mounted';
 
 const readProvider = new ethers.providers.JsonRpcProvider(
   process.env.NEXT_PUBLIC_EXPLORER_NETWORK
@@ -22,12 +22,13 @@ const readProvider = new ethers.providers.JsonRpcProvider(
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [balance, setBalance] = useState('0');
   const { account } = useWeb3React();
+  const isMounted = useIsMounted();
 
   const { loginMetamask, loginWalletConnect, logout } = useAuthorization(
     metamaskConnector,
     walletconnectConnector
   );
-  const isLoaded = useAutoLogin(metamaskConnector);
+  useAutoLogin(metamaskConnector);
 
   useEffect(() => {
     getBalance();
@@ -59,13 +60,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <main className="flex-auto pt-28">
       <div className="relative">
-        <Header
-          loginMetamask={loginMetamask}
-          loginWalletConnect={loginWalletConnect}
-          account={account}
-          disconnect={logout}
-          balance={balance}
-        />
+        {isMounted && (
+          <Header
+            loginMetamask={loginMetamask}
+            loginWalletConnect={loginWalletConnect}
+            account={account}
+            disconnect={logout}
+            balance={balance}
+          />
+        )}
       </div>
       <div className="flex flex-col pt-10 pb-10">{children}</div>
     </main>

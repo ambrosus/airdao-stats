@@ -16,7 +16,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Airdao Network Statistics',
+  title: 'AirDAO | Network Statistics',
   description: 'Ambrosus Network Status',
 };
 

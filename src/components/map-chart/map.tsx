@@ -90,45 +90,8 @@ const MapChart = () => {
                 },
                 layoutAlgorithm: {
                   type: 'grid',
-                  gridSize: 70,
+                  gridSize: 100,
                 },
-                zones: [
-                  {
-                    from: 1,
-                    to: 4,
-                    marker: {
-                      radius: 13,
-                    },
-                  },
-                  {
-                    from: 5,
-                    to: 9,
-                    marker: {
-                      radius: 15,
-                    },
-                  },
-                  {
-                    from: 10,
-                    to: 15,
-                    marker: {
-                      radius: 17,
-                    },
-                  },
-                  {
-                    from: 16,
-                    to: 20,
-                    marker: {
-                      radius: 19,
-                    },
-                  },
-                  {
-                    from: 21,
-                    to: 100,
-                    marker: {
-                      radius: 21,
-                    },
-                  },
-                ],
               },
               tooltip: {
                 pointFormatter: function () {

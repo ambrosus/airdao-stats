@@ -17,7 +17,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'AirDAO | Network Statistics',
-  description: 'Ambrosus Network Status',
+  description: 'AirDAO Network Status',
 };
 
 export default function RootLayout({

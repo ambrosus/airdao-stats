@@ -8,9 +8,9 @@
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
 "@airdao/ui-library@^1.1.21":
-  version "1.1.21"
-  resolved "https://registry.yarnpkg.com/@airdao/ui-library/-/ui-library-1.1.21.tgz#4981f2aca43e574ecd41fe70e835307a42e6ab16"
-  integrity sha512-6Aa625+e1DCUY6RALmynaahAVkWHt2ecV04wVC+yrzYkFeoE8bpMmxHraOnjJYE5sSxguiDs95dL+f/NOJp1ow==
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@airdao/ui-library/-/ui-library-1.2.1.tgz#fe492e54a170c3b70634b38e410a22a5d7d42719"
+  integrity sha512-rFpzUhb2+DMdbhFrCecLPYZOip9PElDtXu6x9Ha1l73RVinZI01hcHBofwoAGdpmTXL04pdDPcuohKHx6u3igw==
   dependencies:
     "@prismicio/client" "^7.1.1"
     "@prismicio/react" "^2.5.0"

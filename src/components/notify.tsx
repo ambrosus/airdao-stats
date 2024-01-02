@@ -8,11 +8,11 @@ const Notify = () => {
         <InfoIcon />
       </span>
       <p>
-        Node Tracker shows statistics of detected nodes running on the network.
-        Statistics include the list of continents with the stake size, world map
-        and decentralization of the AirDAO project...{' '}
+        Node Tracker shows statistics of active AirDAO network nodes. The
+        statistics include total AMB staked per continent and a map of global
+        node distribution. Learn more about network decentralization with{' '}
         <AnchorLink target="_blank" href="https://airdao.io/academy">
-          Learn more in AirDAO Academy
+          AirDAO Academy
         </AnchorLink>
         .
       </p>

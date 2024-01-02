@@ -5,7 +5,6 @@ import { useState, useRef, useEffect } from 'react';
 import useWebSocket from 'react-use-websocket';
 import _ from 'lodash';
 
-import * as Toast from '@/config/toast';
 import { latencyFilter } from '@/lib/helpers/table';
 import DataContext from './context';
 import { INode } from '@/types';
@@ -57,7 +56,6 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
       }
 
       if (incomeData.emit && incomeData.emit[0] === 'init') {
-        Toast.success('Got nodes list');
         const incomeNodes = incomeData.emit[1].nodes;
         setIncomeNodes(incomeNodes);
         socketAction('init', incomeNodes);
@@ -125,16 +123,6 @@ const DataProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
         break;
       case 'add':
         index = findIndex({ id: data.id });
-
-        if (addNewNode(data)) {
-          Toast.success(
-            `New node ${
-              incomeNodes[findIndex({ id: data.id })].info.name
-            } connected!`
-          );
-        } else {
-          Toast.info('Node ' + incomeNodes[index].info.name + ' reconnected!');
-        }
 
         break;
       case 'update':

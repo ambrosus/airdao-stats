@@ -24,7 +24,6 @@
     "overlayscrollbars-react": "^0.5.3",
     "react": "^18",
     "react-dom": "^18",
-    "react-toastify": "^9.1.3",
     "react-use-websocket": "^4.5.0"
   },
   "devDependencies": {

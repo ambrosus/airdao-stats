@@ -21,7 +21,7 @@ export function RangeList({ table }: { table: any }) {
       >
         {() => (
           <>
-            <Listbox.Button className="flex w-[90px] flex-1 items-center text-base font-medium justify-between border border-solid border-black-600/10 rounded-4xl bg-white p-4 text-black-700">
+            <Listbox.Button className="flex w-[90px] flex-1 items-center text-base font-medium justify-between border border-solid border-black-600/10 rounded-4xl bg-white px-4 py-2.7 text-black-700">
               {pageSize}
               <ChevronDown className="ml-2" />
             </Listbox.Button>

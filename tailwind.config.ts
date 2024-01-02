@@ -41,6 +41,7 @@ const config: Config = {
       neutral: {
         100: 'rgb(var(--color-neutral-100) / <alpha-value>)',
         200: 'rgb(var(--color-neutral-200) / <alpha-value>)',
+        300: 'rgb(var(--color-neutral-300) / <alpha-value>)',
       },
       black: {
         100: 'rgb(var(--color-black-100) / <alpha-value>)',
@@ -67,6 +68,9 @@ const config: Config = {
       },
     },
     extend: {
+      padding: {
+        2.7: '11px',
+      },
       maxWidth: {
         'screen-xl': 'var(--container-width)',
       },

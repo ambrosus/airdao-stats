@@ -13,7 +13,7 @@ type InputProps = React.DetailedHTMLProps<
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, type = 'text', className, ...props }, ref) => (
-    <div className="">
+    <div>
       <label>
         {label && (
           <span className={cn('block font-medium')}>
@@ -30,7 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
           className={cn(
-            'w-full bg-white rounded-[82px] p-4 text-black-600 placeholder:text-black-600/60 border border-solid border-black-600/10 text-base transition focus:outline-none',
+            'w-full bg-white rounded-[82px] px-4 py-2.7 text-black-600 placeholder:text-black-600/60 border border-solid border-black-600/10 text-base transition focus:outline-none',
             className,
             {
               'invalid:border-alert-100 invalid:bg-alert-5': error,

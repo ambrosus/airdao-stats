@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
-import { ToastContainer, Slide } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import DataProvider from '@/contexts/data/provider';
 import '@/assets/css/globals.css';
@@ -37,7 +35,6 @@ export default function RootLayout({
         <Web3ReactConfig>
           <DataProvider>{children}</DataProvider>
         </Web3ReactConfig>
-        <ToastContainer transition={Slide} autoClose={3000} />
       </body>
     </html>
   );

@@ -12,6 +12,7 @@
     --color-black-700: 0 0 0;
     --color-neutral-100: 103 107 115;
     --color-neutral-200: 88 102 126;
+    --color-neutral-300: 161 166 178;
     --color-blue-100: 69 126 255;
 
     --color-success: 45 186 141;
@@ -67,4 +68,12 @@
   .round {
     @apply flex w-[64px] h-[64px] justify-center items-center bg-black-100 border-2 border-solid border-black-200 rounded-circle;
   }
+}
+
+.multi-line {
+  @apply block whitespace-nowrap text-center;
+}
+
+.highcharts-tooltip {
+  @apply font-inter font-medium;
 }

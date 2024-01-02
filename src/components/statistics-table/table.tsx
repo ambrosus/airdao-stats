@@ -25,6 +25,20 @@ const StatisticsTable = () => {
     }
   }, [nodes]);
 
+  const onSearchHandler = (value: string) => {
+    const result = nodes.filter((node) => {
+      if (node?.id) {
+        return (
+          node.id
+            .replace('apollo', '')
+            .toLowerCase()
+            .indexOf(value.toLowerCase()) > -1
+        );
+      }
+    });
+    setCurrentNodes(result);
+  };
+
   const table = useReactTable({
     data: currentNodes,
     // @ts-ignore
@@ -44,7 +58,11 @@ const StatisticsTable = () => {
 
   return (
     <div className="flex flex-col">
-      <TableHeader table={table} pageCount={pageCount} />
+      <TableHeader
+        searchHandler={onSearchHandler}
+        table={table}
+        pageCount={pageCount}
+      />
       <Scrollbar style={{ width: '100%' }} autoHide="never">
         <table className="min-w-full w-full whitespace-nowrap">
           <thead>
@@ -100,7 +118,7 @@ const StatisticsTable = () => {
               <tr>
                 <td
                   colSpan={12}
-                  className="py-3 px-4 text-center text-base leading-7 font-normal text-black-500"
+                  className="py-3 px-4 text-center text-base leading-7 font-normal text-neutral-300"
                 >
                   Not found
                 </td>

@@ -1,13 +1,22 @@
-import Input from '@/components/ui/forms/input';
+import { useState } from 'react';
 
+import Input from '@/components/ui/forms/input';
 import SearchIcon from '@/components/icons/search-icon';
 import ResetIcon from '@/components/icons/reset-icon';
-
 import { ISearch } from '@/types';
 
-const SearchInput = ({ value, setValue }: ISearch) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
+const SearchInput = ({ handler }: ISearch) => {
+  const [value, setValue] = useState('');
+
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setValue(val);
+    handler(val);
+  };
+
+  const resetHandler = () => {
+    setValue('');
+    handler('');
   };
 
   return (
@@ -18,7 +27,7 @@ const SearchInput = ({ value, setValue }: ISearch) => {
         </div>
         <div className="flex-1">
           <Input
-            onChange={handleChange}
+            onChange={onChangeHandler}
             value={value}
             className="pl-12 pr-11"
             placeholder="Search"
@@ -27,7 +36,7 @@ const SearchInput = ({ value, setValue }: ISearch) => {
         {value && (
           <button
             type="button"
-            onClick={() => setValue('')}
+            onClick={resetHandler}
             className="absolute inset-y-0 right-0 flex items-center pr-4"
           >
             <ResetIcon />

@@ -7,8 +7,7 @@ export type BlockListItem = {
 };
 
 export interface ISearch {
-  value: string;
-  setValue: any;
+  handler: (value: string) => any;
 }
 
 export interface IApolloInfo {

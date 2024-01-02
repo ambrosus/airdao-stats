@@ -28,7 +28,10 @@ const columns = [
     header: () => (
       <div className="flex items-center">
         <span className="mr-1">Node Hash</span>
-        <Tooltip message="Node Name">
+        <Tooltip
+          isMultiline
+          message="Node hashes are unique identifiers <br/> for individual AirDAO network nodes"
+        >
           <InfoSmallIcon />
         </Tooltip>
       </div>
@@ -45,7 +48,10 @@ const columns = [
     header: () => (
       <div className="flex items-center">
         <span className="mr-1">Country</span>
-        <Tooltip message="Country Name">
+        <Tooltip
+          isMultiline
+          message="The geographical location <br/> of an AirDAO network node"
+        >
           <InfoSmallIcon />
         </Tooltip>
       </div>
@@ -86,7 +92,10 @@ const columns = [
     header: () => (
       <div className="flex items-center">
         <span className="mr-1">Last Block</span>
-        <Tooltip message="Last Block">
+        <Tooltip
+          isMultiline
+          message="The last block contains the latest <br/> transactions and links to the previous block."
+        >
           <InfoSmallIcon />
         </Tooltip>
       </div>
@@ -97,7 +106,10 @@ const columns = [
     header: () => (
       <div className="flex items-center">
         <span className="mr-1">Tx Hash</span>
-        <Tooltip message="Tx Hash">
+        <Tooltip
+          isMultiline
+          message="A TX hash is a unique identifier <br/> of an individual blockchain transaction"
+        >
           <InfoSmallIcon />
         </Tooltip>
       </div>

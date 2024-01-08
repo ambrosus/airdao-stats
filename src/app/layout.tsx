@@ -27,7 +27,6 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <Script src="https://code.highcharts.com/maps/highmaps.js" />
-        <Script src="https://code.highcharts.com/maps/modules/map.js" />
         <Script src="https://code.highcharts.com/mapdata/index.js" />
         <Script src="https://code.highcharts.com/modules/marker-clusters.js" />
       </head>

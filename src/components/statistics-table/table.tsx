@@ -11,6 +11,7 @@ import { useData } from '@/contexts/data/use-data';
 import TableHeader from './header';
 import columns from './columns';
 import Scrollbar from '@/components/ui/scrollbar';
+import Pagination from '@/components/statistics-table/pagination';
 import Loader from '@/components/ui/loader';
 
 const StatisticsTable = () => {
@@ -45,7 +46,7 @@ const StatisticsTable = () => {
     columns,
     initialState: {
       pagination: {
-        pageSize: 100,
+        pageSize: 10,
       },
     },
     getCoreRowModel: getCoreRowModel(),
@@ -58,13 +59,9 @@ const StatisticsTable = () => {
 
   return (
     <div className="flex flex-col">
-      <TableHeader
-        searchHandler={onSearchHandler}
-        table={table}
-        pageCount={pageCount}
-      />
+      <TableHeader searchHandler={onSearchHandler} table={table} />
       <Scrollbar style={{ width: '100%' }} autoHide="never">
-        <table className="min-w-full w-full whitespace-nowrap">
+        <table className="min-w-full w-full mb-5 whitespace-nowrap">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -127,6 +124,7 @@ const StatisticsTable = () => {
           </tbody>
         </table>
       </Scrollbar>
+      <Pagination table={table} pageCount={pageCount} />
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { Listbox } from '@headlessui/react';
 
 import ChevronDown from '@/components/icons/chevron-down-icon';
 
-const rangeList = [20, 50, 100, 200];
+const rangeList = [10, 50, 100, 200];
 
 export function RangeList({ table }: { table: any }) {
   const [pageSize, setPageSize] = useState(

@@ -70,7 +70,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           />
         )}
       </div>
-      <div className="flex flex-col pt-10 pb-10">{children}</div>
+      <div className="flex flex-col pt-10 pb-14">{children}</div>
     </main>
   );
 }

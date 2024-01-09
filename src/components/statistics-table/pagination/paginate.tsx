@@ -186,7 +186,7 @@ const Paginate = ({ table, pageCount }: { table: any; pageCount: number }) => {
 
   return (
     <nav>
-      <ul className="flex items-center text-base gap-1">
+      <ul className="flex justify-center items-center text-base gap-1">
         <li>
           <button
             onClick={handlePreviousPage}

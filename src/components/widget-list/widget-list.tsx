@@ -16,7 +16,7 @@ const WidgetList = ({
           Continent
         </span>
         <span className="text-3 leading-5 uppercase font-medium text-neutral-100">
-          Stake Sizes
+          AMB Staked
         </span>
       </div>
       <div className="flex items-center justify-center min-h-[155px]">

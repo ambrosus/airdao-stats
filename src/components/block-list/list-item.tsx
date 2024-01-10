@@ -1,3 +1,4 @@
+import { Children } from 'react';
 import cn from 'clsx';
 
 import { BlockListItem } from '@/types';
@@ -8,12 +9,21 @@ const ListItem = ({
   valueClassName = '',
   className,
   icon: Icon,
-}: BlockListItem) => {
+  children,
+}: React.PropsWithChildren<BlockListItem>) => {
+  const hasChildren = Children.count(children) > 0;
   return (
     <div className={cn('flex flex-col', className)}>
       <div className="flex items-center mb-2">
         {Icon && <Icon className="mr-2" />}
-        <h6 className="uppercase text-neutral-200 font-medium">{title}</h6>
+        <h6
+          className={cn('uppercase text-neutral-200 font-medium', {
+            'mr-1': hasChildren,
+          })}
+        >
+          {title}
+        </h6>
+        {children}
       </div>
       <b
         className={cn(

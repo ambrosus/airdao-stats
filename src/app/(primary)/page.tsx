@@ -9,7 +9,7 @@ import StatisticsTable from '@/components/statistics-table';
 export default function Home() {
   return (
     <div className="mx-auto max-w-screen-xl w-full px-5">
-      <h4 className="mb-6">AirDAO Network node tracker</h4>
+      <h4 className="mb-6">Node Tracker</h4>
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-y-[20px] lg:gap-5 mb-4">
         <div className="panel col-span-3">
           <Notify />

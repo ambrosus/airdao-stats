@@ -94,7 +94,7 @@ const columns = [
         <span className="mr-1">Last Block</span>
         <Tooltip
           isMultiline
-          message="The last block contains the latest <br/> transactions and links to the previous block."
+          message="The last block contains the latest <br/> transactions and links to the previous block"
         >
           <InfoSmallIcon />
         </Tooltip>

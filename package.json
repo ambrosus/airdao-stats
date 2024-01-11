@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@airdao/ui-library": "^1.1.21",
+    "@airdao/ui-library": "^1.2.3",
     "@headlessui/react": "^1.7.17",
     "@tanstack/react-table": "^8.10.7",
     "@web3-react/core": "^8.2.2",

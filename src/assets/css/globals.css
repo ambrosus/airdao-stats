@@ -68,6 +68,10 @@
   .round {
     @apply flex w-[64px] h-[64px] justify-center items-center bg-black-100 border-2 border-solid border-black-200 rounded-circle;
   }
+
+  .container {
+    @apply relative w-full mx-auto max-w-screen-xl;
+  }
 }
 
 .multi-line {

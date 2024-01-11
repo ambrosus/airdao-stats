@@ -1,5 +1,6 @@
 // @ts-nocheck
 'use client';
+
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { Header } from '@airdao/ui-library';
@@ -58,8 +59,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <main className="flex-auto pt-28">
-      <div className="relative">
+    <main className="pt-28">
+      <div className="container">
         {isMounted && (
           <Header
             loginMetamask={loginMetamask}

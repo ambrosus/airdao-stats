@@ -23,8 +23,10 @@ const useGetNodes = (incomeNodes: INode[]) => {
         return node;
       });
 
-      if (result.length > 0) {
-        setNodes(result);
+      const filteredResult = result.filter((item: any) => item.info.name);
+
+      if (filteredResult.length > 0) {
+        setNodes(filteredResult);
       }
     }
   }, [apollosNodes, incomeNodes]);

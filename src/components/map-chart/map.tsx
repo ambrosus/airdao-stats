@@ -81,7 +81,11 @@ const MapChart = () => {
             ],
           },
           plotOptions: {
+            series: {
+              animation: false,
+            },
             mappoint: {
+              animation: false,
               cluster: {
                 enabled: true,
                 allowOverlap: false,
@@ -89,8 +93,8 @@ const MapChart = () => {
                   duration: 450,
                 },
                 layoutAlgorithm: {
-                  type: 'grid',
-                  gridSize: 100,
+                  type: 'squarified',
+                  gridSize: 70,
                 },
               },
               tooltip: {

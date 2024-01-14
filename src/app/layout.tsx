@@ -29,6 +29,8 @@ export default function RootLayout({
         <Script src="https://code.highcharts.com/maps/highmaps.js" />
         <Script src="https://code.highcharts.com/mapdata/index.js" />
         <Script src="https://code.highcharts.com/modules/marker-clusters.js" />
+        <Script src="https://code.highcharts.com/modules/coloraxis.js" />
+        <Script src="https://code.highcharts.com/maps/modules/accessibility.js" />
       </head>
       <body className={inter.variable}>
         <Web3ReactConfig>

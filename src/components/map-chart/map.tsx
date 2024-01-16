@@ -70,14 +70,12 @@ const MapChart = () => {
           colorAxis: {
             min: 0,
             stops: [
-              [0, '#efefff'],
-              [0.5, Highcharts.getOptions().colors[0]],
-              [
-                1,
-                Highcharts.color(Highcharts.getOptions().colors[0])
-                  .brighten(-0.2)
-                  .get(),
-              ],
+              [0, '#e9effb'],
+              [0.2, '#7a9dec'],
+              [0.5, '#5080ec'],
+              [0.65, '#3568dd'],
+              [0.75, '#2c55b6'],
+              [1, '#172e63'],
             ],
           },
           plotOptions: {
@@ -96,6 +94,32 @@ const MapChart = () => {
                   type: 'squarified',
                   gridSize: 70,
                 },
+                zones: [
+                  {
+                    from: 1,
+                    to: 4,
+                    marker: {
+                      fillColor: '#3568dd',
+                      radius: 13,
+                    },
+                  },
+                  {
+                    from: 5,
+                    to: 9,
+                    marker: {
+                      fillColor: '#2c55b6',
+                      radius: 15,
+                    },
+                  },
+                  {
+                    from: 10,
+                    to: 15,
+                    marker: {
+                      fillColor: '#172e63',
+                      radius: 17,
+                    },
+                  },
+                ],
               },
               tooltip: {
                 pointFormatter: function () {
@@ -124,7 +148,6 @@ const MapChart = () => {
             {
               type: 'mappoint',
               name: 'Nodes',
-              color: Highcharts.getOptions().colors[0],
               enableMouseTracking: true,
               data: markers,
               dataLabels: {

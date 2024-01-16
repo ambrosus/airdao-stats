@@ -44,7 +44,7 @@ export function getGeos(nodes: INode[]) {
     if (!countMap.has(key)) {
       countMap.set(key, { stake: _.get(node, 'stake.ether'), count: 1 });
       result.push({
-        color: '#555',
+        color: '#0e1c3e',
         lat,
         lon,
         stake: _.get(node, 'stake.ether'),

@@ -23,7 +23,7 @@ const useGetNodes = (incomeNodes: INode[]) => {
         return node;
       });
 
-      const filteredResult = result.filter((item: any) => item.info.name);
+      const filteredResult = result.filter((item: any) => item.info?.name);
 
       if (filteredResult.length > 0) {
         setNodes(filteredResult);
